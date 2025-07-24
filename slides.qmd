@@ -3,6 +3,7 @@ title: "Slides"
 ---
 
 + Some R example
+
 ```{r}
 #| echo: True
 
