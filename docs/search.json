@@ -2,9 +2,9 @@
   {
     "objectID": "index.html",
     "href": "index.html",
-    "title": "HKU_Summer_Programme",
+    "title": "HKU Summer Programme 2005",
     "section": "",
-    "text": "This is KT’s website for the HKU Summer Programme\nTo learn more about Quarto websites visit https://quarto.org/docs/websites.\n\n1 + 1\n\n[1] 2"
+    "text": "This is KT from the Faculty of Social Sciences at HKU."
   },
   {
     "objectID": "about.html",
@@ -12,5 +12,12 @@
     "title": "About",
     "section": "",
     "text": "About this site\n\n1 + 1\n\n[1] 2"
+  },
+  {
+    "objectID": "slides.html",
+    "href": "slides.html",
+    "title": "Slides",
+    "section": "",
+    "text": "Some R example\n\n\ndata(mtcars)\n\nlibrary(ggplot2)\n\nggplot(mtcars, aes(x = wt, y = mpg)) +\n  geom_point() +\n  labs(title = \"Scatter plot of MPG vs Weight\",\n       x = \"Weight (1000 lbs)\",\n       y = \"Miles per Gallon (MPG)\")"
   }
 ]
