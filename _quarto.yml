@@ -3,7 +3,7 @@ project:
   output-dir: docs  # GitHub Pages publishes from `/docs`
 
 website:
-  title: "HKU_Summer_Programme"
+  title: "HKU Summer Programme"
   navbar:
     left:
       - href: index.qmd
