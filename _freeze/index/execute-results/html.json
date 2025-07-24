@@ -1,0 +1,15 @@
+{
+  "hash": "c0ab6c8843e0f58eb5feb77aaeeabf4f",
+  "result": {
+    "engine": "knitr",
+    "markdown": "---\ntitle: \"HKU_Summer_Programme\"\n---\n\n\n\n\nThis is KT's website for the HKU Summer Programme\n\nTo learn more about Quarto websites visit <https://quarto.org/docs/websites>.\n\n\n\n\n::: {.cell}\n\n```{.r .cell-code}\n1 + 1\n```\n\n::: {.cell-output .cell-output-stdout}\n\n```\n[1] 2\n```\n\n\n:::\n:::\n",
+    "supporting": [],
+    "filters": [
+      "rmarkdown/pagebreak.lua"
+    ],
+    "includes": {},
+    "engineDependencies": {},
+    "preserve": {},
+    "postProcess": true
+  }
+}
