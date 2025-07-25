@@ -13,7 +13,7 @@ Download slides for the HKU Social Science Summer Programme:
 
 - [Sentiment Analysis with R](Workshop_Sentiment_Analysis_R.html)
 
-- <a href=https://kwan-MSDA.github.io/HKU_Summer_Programme/Workshop_Sentiment_Analysis_R.html" download>Download Sentiment Analysis with R</a>
+- <a href="https://kwan-MSDA.github.io/HKU_Summer_Programme/Workshop_Sentiment_Analysis_R.html" download>Download Sentiment Analysis with R</a>
 
 
 :::
