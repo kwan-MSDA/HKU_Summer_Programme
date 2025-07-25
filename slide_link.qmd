@@ -4,10 +4,14 @@ format: html
 ---
 
 
-Download slide decks for the HKU Social Science Summer Programme:
+Download slide sfor the HKU Social Science Summer Programme:
 
-::: {.callout-note}
+::: {.callout icon=false}
+
+## Slides
+
 - [Elements of Sentiment Analysis](https://raw.githubusercontent.com/kwan-MSDA/HKU_Summer_Programme/main/docs/Hands_on_Workshop_Sentiment_Analysis_finalized2.html)
 - [Sentiment Analysis with R](Workshop_Sentiment_Analysis_R.html)
+
 
 :::

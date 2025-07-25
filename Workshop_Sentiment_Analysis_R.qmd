@@ -49,10 +49,10 @@ include-in-header:
       }
       </style>
       
-# execute:
-#   cache: TRUE
-#   dev: "cairo_png"  # Use cairo_png device
-#   python: "C:/Users/ktwong/AppData/Local/Programs/Python/Python312/python.exe"
+execute:
+   freeze: auto
+   cache: TRUE
+
    
 
 engine: knitr
