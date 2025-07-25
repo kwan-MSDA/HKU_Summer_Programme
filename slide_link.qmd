@@ -1,6 +1,13 @@
 ---
-title: "slides"
+title: "Course slides"
 format: html 
 ---
 
-+ [Sentiment Analysis](Hands_on_Workshop_Sentiment_Analysis.html)
+## Course Slides
+
+Download slide decks for the HKU Social Science Summer Programme:
+
+::: {.callout-note}
+- [Elements of Sentiment Analysis](https://raw.githubusercontent.com/kwan-MSDA/HKU_Summer_Programme/main/docs/Hands_on_Workshop_Sentiment_Analysis.html)
+
+:::
