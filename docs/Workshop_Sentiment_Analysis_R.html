@@ -1154,9 +1154,9 @@ display:block!important;
 <ul>
 <li class="fragment"><strong>Lexicon-based</strong>
 <ul>
-<li class="fragment">Uses a dictionary to assign scores to words
+<li class="fragment">Uses a dictionary to assign labels/scores to words
 <ul>
-<li class="fragment">e.g., awesome = +3, worried = -2</li>
+<li class="fragment">e.g., awesome <span class="math inline">\(\rightarrow\)</span> positive; worried <span class="math inline">\(\rightarrow\)</span> negative</li>
 </ul></li>
 <li class="fragment">We mainly focus on this approach today for simplicity</li>
 </ul></li>
@@ -1186,7 +1186,7 @@ display:block!important;
 <li class="fragment">Examples:
 <ul>
 <li class="fragment">Companies analyze tweets to improve their products</li>
-<li class="fragment">Governments study comments to address concerns about the satifaction of its public services<br>
+<li class="fragment">Governments study comments to address concerns about the satisfaction of its public services<br>
 </li>
 <li class="fragment">Researchers explore how AI in healthcare is perceived
 <ul>
@@ -1559,15 +1559,15 @@ display:block!important;
 <ul>
 <li class="fragment"><strong>Bing</strong>:
 <ul>
-<li class="fragment">a binary classification + positive/negative</li>
+<li class="fragment">a binary classification: positive/negative</li>
 </ul></li>
 <li class="fragment"><strong>NRC</strong>:
 <ul>
-<li class="fragment">emotion-based (e.g., joy, anger) and positive/negative classifications</li>
+<li class="fragment">emotion-based (e.g. joy, anger) and positive/negative classifications</li>
 </ul></li>
 </ul></li>
 </ul></li>
-<li class="fragment"><p>AI uses lexicons to quantify feelings in text</p></li>
+<li class="fragment"><p>Here, AI uses lexicons to quantify feelings in text</p></li>
 </ul>
 <aside class="notes">
 <ul>
@@ -1701,8 +1701,9 @@ display:block!important;
 <li class="fragment"><p><strong>Objective: Calculate total sentiment for each comment</strong></p></li>
 <li class="fragment"><p>Sum word scores per comment to get its overall sentiment</p>
 <ul>
-<li class="fragment">Positive total = positive comment</li>
-<li class="fragment">Negative total = negative comment</li>
+<li class="fragment">Positive total = Sum of positive comments (scores)</li>
+<li class="fragment">Negative total = Sun of negative comments (scores)</li>
+<li class="fragment">sentiment = positive total - negative total</li>
 </ul></li>
 </ul>
 <div class="fragment">
@@ -1720,7 +1721,7 @@ display:block!important;
 <li class="fragment"><strong>Task 7.1: View Results</strong>
 <ul>
 <li class="fragment">Run <code>print(comment_sentiment)</code></li>
-<li class="fragment">Which comment has the highest total_score? Lowest?</li>
+<li class="fragment">Which comment has the lowest score?</li>
 </ul></li>
 <li class="fragment"><strong>Task 7.2: Sort by Total Score</strong>
 <ul>
@@ -1772,6 +1773,7 @@ display:block!important;
 <li>Run comment_sentiment %&gt;% filter(total_score &gt; 0) - How many positive comments?</li>
 </ul></li>
 </ul></li>
+<li><p>table(comment_sentiment$sentiment, useNA=“ifany”)</p></li>
 </ul>
 <style type="text/css">
 span.MJX_Assistive_MathML {
@@ -2027,9 +2029,9 @@ display:block!important;
 <ul>
 <li class="fragment"><strong>Task 9.1: Compare Positive and Negative Comments</strong>
 <ul>
-<li class="fragment">Run <code>comment_sentiment_bing %&gt;% filter(positive &gt; 0)</code><br>
+<li class="fragment">Run <code>comment_sentiment_bing %&gt;% filter(total_score &gt; 0)</code><br>
 </li>
-<li class="fragment">Run <code>comment_sentiment_nrc %&gt;% filter(positive &gt; 0)</code><br>
+<li class="fragment">Run <code>comment_sentiment_nrc %&gt;% filter(total_score &gt; 0)</code><br>
 </li>
 <li class="fragment">Which comments are positive by Bing? Which by NRC?</li>
 </ul></li>
@@ -2203,7 +2205,7 @@ display:block!important;
 <span id="cb22-4"><a></a></span>
 <span id="cb22-5"><a></a><span class="fu">list_models</span>()</span>
 <span id="cb22-6"><a></a></span>
-<span id="cb22-7"><a></a><span class="co">#pull(&quot;llama3.1&quot;)  # download a model (equivalent bash code: ollama run llama3.1)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb22-7"><a></a><span class="co">#pull(&quot;llama3.2:2b&quot;)  # download a model (equivalent bash code: ollama run llama3.2:2b)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 </div>
 <ul>
@@ -2354,7 +2356,7 @@ display:block!important;
 <li class="fragment">Run <code>comment_sentiment %&gt;% filter(id %in% c(7, 14, 26))</code></li>
 <li class="fragment">Why might the lexicon and LLM differ for these comments?
 <ul>
-<li class="fragment">Discuss how LLMs capture context (e.g., sarcasm) better than lexicons</li>
+<li class="fragment">Discuss how LLMs capture context (e.g. sarcasm) better than lexicons</li>
 </ul></li>
 </ul></li>
 </ul>
@@ -2431,10 +2433,7 @@ display:block!important;
 <section id="more-discussion" class="slide level2">
 <h2>More Discussion</h2>
 <ul>
-<li class="fragment"><p>Share one comment and its score</p>
-<ul>
-<li class="fragment">Does it match the text’s tone?</li>
-</ul></li>
+<li class="fragment"><p>Does score match the text’s tone?</p></li>
 <li class="fragment"><p>How does sentiment analysis help understand AI’s societal impact?</p></li>
 <li class="fragment"><p>Companies: Improve AI based on feedback</p>
 <ul>
