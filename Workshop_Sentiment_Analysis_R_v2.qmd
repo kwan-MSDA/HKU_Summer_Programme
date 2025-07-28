@@ -19,7 +19,6 @@ format:
     theme: clean_42_rb.scss
     embed-resources: true
     chalkboard: false
-    show-notes: false
     multiplex: false
     slide-number: c/t
     preview-links: auto
