@@ -19,6 +19,7 @@ format:
     theme: clean_42_rb.scss
     embed-resources: true
     chalkboard: false
+    show-notes: false
     multiplex: false
     slide-number: c/t
     preview-links: auto
@@ -862,6 +863,44 @@ comparison_df2
 
 comparison_df2 %>%
   filter(sentiment_bing != sentiment_afinn | is.na(sentiment_bing) != is.na(sentiment_afinn))
+
+```
+
++ **Task 9.4: Visualize AFINN vs Bing**
+  + Create a bar plot comparing AFINN and Bing sentiments
+  + Use `geom_bar()` to show counts of each sentiment per comment
+  
+  
+. . .
+
+```{r}
+#| echo: True
+#| eval: false
+
+# Reshape the data to long format for plotting
+comparison_long <- comparison_df2 %>%
+  select(id, sentiment_afinn, sentiment_bing) %>%
+  pivot_longer(cols = c(sentiment_afinn, sentiment_bing),
+               names_to = "lexicon",
+               values_to = "sentiment") %>%
+  mutate(lexicon = recode(lexicon, 
+                          sentiment_afinn = "AFINN", 
+                          sentiment_bing = "Bing"))
+
+# Create a grouped bar plot to compare sentiment distributions
+ggplot(comparison_long, aes(x = sentiment, fill = lexicon)) +
+  geom_bar(position = "dodge", alpha = 0.5) +
+  geom_text(stat = "count", 
+            aes(label = after_stat(count), group = lexicon),
+            position = position_dodge(width = 0.45), 
+            vjust = -0.5) +
+  labs(title = "Comparison of Sentiment Labels: AFINN vs Bing",
+       x = "Sentiment",
+       y = "Count",
+       fill = "Lexicon") +
+  scale_fill_manual(values = c("AFINN" = "blue", "Bing" = "red")) +
+  theme_minimal()
+
 
 ```
 
