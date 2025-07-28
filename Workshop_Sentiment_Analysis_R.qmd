@@ -934,7 +934,7 @@ ggplot(words_nrc_emotions, aes(x = sentiment, y = word_count, fill = sentiment))
 
 :::
 
-## Step 10 Sentiment Analysis with Ollama
+## Step 10: Sentiment Analysis with Ollama
 
 + **Objective: Use Ollama with Llama 3.2:3b to perform sentiment analysis**
 
@@ -991,7 +991,7 @@ resp_process(resp, "df")
 ```
 
 
-## Step 10 Sentiment Analysis with Ollama (continued)
+## Step 10: Sentiment Analysis with Ollama (continued)
 
 + Define the function to get sentiment using Ollama
 
@@ -1009,11 +1009,11 @@ get_sentiment_ollama <- function(text) {
 
 ```
 
-+ **Task 9.1: Test the Function**  
++ **Task 10.1: Test the Function**  
   + Run `get_sentiment_ollama("AI is amazing and will make education so much better!")` 
   + What sentiment does it return?
   
-+ **Task 9.2: Analyze All Comments**
++ **Task 10.2: Analyze All Comments**
 
 . . .
 
@@ -1328,6 +1328,7 @@ real_sentiment_nrc <- real_words %>%
 
 # AFINN
 library(ggplot2)
+
 ggplot(real_sentiment_afinn, aes(x = id, y = total_score)) +
   geom_bar(stat = "identity", fill = "steelblue") +
   labs(title = "AFINN Sentiment Scores", x = "Comment ID", y = "Score") +
@@ -1351,11 +1352,13 @@ ggplot(real_sentiment_bing, aes(x = id)) +
 
 # If you have Ollama and Llama3 installed:
 library(ollamar)
+
 get_sentiment_ollama <- function(text) {
   prompt <- paste("Classify the sentiment of the following text as positive, negative, or neutral, and respond with only the label in lower case:", text)
   response <- generate(model = "llama3.2:3b", prompt = prompt, output="text")
   return(response)
 }
+
 real_comments <- real_comments %>%
   mutate(sentiment_ollama = map_chr(text, get_sentiment_ollama))
 

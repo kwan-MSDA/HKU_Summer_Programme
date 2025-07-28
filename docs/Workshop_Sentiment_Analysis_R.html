@@ -2176,7 +2176,7 @@ display:block!important;
 </div>
 </section>
 <section id="step-10-sentiment-analysis-with-ollama" class="slide level2">
-<h2>Step 10 Sentiment Analysis with Ollama</h2>
+<h2>Step 10: Sentiment Analysis with Ollama</h2>
 <ul>
 <li class="fragment"><p><strong>Objective: Use Ollama with Llama 3.2:3b to perform sentiment analysis</strong></p></li>
 <li class="fragment"><p>Ollama runs large language models (LLMs) like Llama 3.2:3b locally</p>
@@ -2230,7 +2230,7 @@ display:block!important;
 </div>
 </section>
 <section id="step-10-sentiment-analysis-with-ollama-continued" class="slide level2">
-<h2>Step 10 Sentiment Analysis with Ollama (continued)</h2>
+<h2>Step 10: Sentiment Analysis with Ollama (continued)</h2>
 <ul>
 <li class="fragment">Define the function to get sentiment using Ollama</li>
 </ul>
@@ -2246,12 +2246,12 @@ display:block!important;
 </details>
 </div>
 <ul>
-<li class="fragment"><strong>Task 9.1: Test the Function</strong>
+<li class="fragment"><strong>Task 10.1: Test the Function</strong>
 <ul>
 <li class="fragment">Run <code>get_sentiment_ollama(&quot;AI is amazing and will make education so much better!&quot;)</code></li>
 <li class="fragment">What sentiment does it return?</li>
 </ul></li>
-<li class="fragment"><strong>Task 9.2: Analyze All Comments</strong></li>
+<li class="fragment"><strong>Task 10.2: Analyze All Comments</strong></li>
 </ul>
 </div>
 <div class="fragment">
@@ -2599,17 +2599,18 @@ display:block!important;
 <summary>Code</summary>
 <div class="sourceCode cell-code" id="cb32"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb32-1"><a></a><span class="co"># AFINN</span></span>
 <span id="cb32-2"><a></a><span class="fu">library</span>(ggplot2)</span>
-<span id="cb32-3"><a></a><span class="fu">ggplot</span>(real_sentiment_afinn, <span class="fu">aes</span>(<span class="at">x =</span> id, <span class="at">y =</span> total_score)) <span class="sc">+</span></span>
-<span id="cb32-4"><a></a>  <span class="fu">geom_bar</span>(<span class="at">stat =</span> <span class="st">&quot;identity&quot;</span>, <span class="at">fill =</span> <span class="st">&quot;steelblue&quot;</span>) <span class="sc">+</span></span>
-<span id="cb32-5"><a></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">&quot;AFINN Sentiment Scores&quot;</span>, <span class="at">x =</span> <span class="st">&quot;Comment ID&quot;</span>, <span class="at">y =</span> <span class="st">&quot;Score&quot;</span>) <span class="sc">+</span></span>
-<span id="cb32-6"><a></a>  <span class="fu">theme_minimal</span>()</span>
-<span id="cb32-7"><a></a></span>
-<span id="cb32-8"><a></a><span class="co"># Bing</span></span>
-<span id="cb32-9"><a></a><span class="fu">ggplot</span>(real_sentiment_bing, <span class="fu">aes</span>(<span class="at">x =</span> id)) <span class="sc">+</span></span>
-<span id="cb32-10"><a></a>  <span class="fu">geom_bar</span>(<span class="fu">aes</span>(<span class="at">y =</span> positive), <span class="at">stat =</span> <span class="st">&quot;identity&quot;</span>, <span class="at">fill =</span> <span class="st">&quot;blue&quot;</span>, <span class="at">alpha =</span> <span class="fl">0.5</span>) <span class="sc">+</span></span>
-<span id="cb32-11"><a></a>  <span class="fu">geom_bar</span>(<span class="fu">aes</span>(<span class="at">y =</span> <span class="sc">-</span>negative), <span class="at">stat =</span> <span class="st">&quot;identity&quot;</span>, <span class="at">fill =</span> <span class="st">&quot;red&quot;</span>, <span class="at">alpha =</span> <span class="fl">0.5</span>) <span class="sc">+</span></span>
-<span id="cb32-12"><a></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">&quot;Bing Lexicon: Positive vs Negative&quot;</span>, <span class="at">x =</span> <span class="st">&quot;Comment ID&quot;</span>, <span class="at">y =</span> <span class="st">&quot;Word Count&quot;</span>) <span class="sc">+</span></span>
-<span id="cb32-13"><a></a>  <span class="fu">theme_minimal</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb32-3"><a></a></span>
+<span id="cb32-4"><a></a><span class="fu">ggplot</span>(real_sentiment_afinn, <span class="fu">aes</span>(<span class="at">x =</span> id, <span class="at">y =</span> total_score)) <span class="sc">+</span></span>
+<span id="cb32-5"><a></a>  <span class="fu">geom_bar</span>(<span class="at">stat =</span> <span class="st">&quot;identity&quot;</span>, <span class="at">fill =</span> <span class="st">&quot;steelblue&quot;</span>) <span class="sc">+</span></span>
+<span id="cb32-6"><a></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">&quot;AFINN Sentiment Scores&quot;</span>, <span class="at">x =</span> <span class="st">&quot;Comment ID&quot;</span>, <span class="at">y =</span> <span class="st">&quot;Score&quot;</span>) <span class="sc">+</span></span>
+<span id="cb32-7"><a></a>  <span class="fu">theme_minimal</span>()</span>
+<span id="cb32-8"><a></a></span>
+<span id="cb32-9"><a></a><span class="co"># Bing</span></span>
+<span id="cb32-10"><a></a><span class="fu">ggplot</span>(real_sentiment_bing, <span class="fu">aes</span>(<span class="at">x =</span> id)) <span class="sc">+</span></span>
+<span id="cb32-11"><a></a>  <span class="fu">geom_bar</span>(<span class="fu">aes</span>(<span class="at">y =</span> positive), <span class="at">stat =</span> <span class="st">&quot;identity&quot;</span>, <span class="at">fill =</span> <span class="st">&quot;blue&quot;</span>, <span class="at">alpha =</span> <span class="fl">0.5</span>) <span class="sc">+</span></span>
+<span id="cb32-12"><a></a>  <span class="fu">geom_bar</span>(<span class="fu">aes</span>(<span class="at">y =</span> <span class="sc">-</span>negative), <span class="at">stat =</span> <span class="st">&quot;identity&quot;</span>, <span class="at">fill =</span> <span class="st">&quot;red&quot;</span>, <span class="at">alpha =</span> <span class="fl">0.5</span>) <span class="sc">+</span></span>
+<span id="cb32-13"><a></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">&quot;Bing Lexicon: Positive vs Negative&quot;</span>, <span class="at">x =</span> <span class="st">&quot;Comment ID&quot;</span>, <span class="at">y =</span> <span class="st">&quot;Word Count&quot;</span>) <span class="sc">+</span></span>
+<span id="cb32-14"><a></a>  <span class="fu">theme_minimal</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 </div>
 <ul>
@@ -2622,13 +2623,15 @@ display:block!important;
 <summary>Code</summary>
 <div class="sourceCode cell-code" id="cb33"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb33-1"><a></a><span class="co"># If you have Ollama and Llama3 installed:</span></span>
 <span id="cb33-2"><a></a><span class="fu">library</span>(ollamar)</span>
-<span id="cb33-3"><a></a>get_sentiment_ollama <span class="ot">&lt;-</span> <span class="cf">function</span>(text) {</span>
-<span id="cb33-4"><a></a>  prompt <span class="ot">&lt;-</span> <span class="fu">paste</span>(<span class="st">&quot;Classify the sentiment of the following text as positive, negative, or neutral, and respond with only the label in lower case:&quot;</span>, text)</span>
-<span id="cb33-5"><a></a>  response <span class="ot">&lt;-</span> <span class="fu">generate</span>(<span class="at">model =</span> <span class="st">&quot;llama3.2:3b&quot;</span>, <span class="at">prompt =</span> prompt, <span class="at">output=</span><span class="st">&quot;text&quot;</span>)</span>
-<span id="cb33-6"><a></a>  <span class="fu">return</span>(response)</span>
-<span id="cb33-7"><a></a>}</span>
-<span id="cb33-8"><a></a>real_comments <span class="ot">&lt;-</span> real_comments <span class="sc">%&gt;%</span></span>
-<span id="cb33-9"><a></a>  <span class="fu">mutate</span>(<span class="at">sentiment_ollama =</span> <span class="fu">map_chr</span>(text, get_sentiment_ollama))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb33-3"><a></a></span>
+<span id="cb33-4"><a></a>get_sentiment_ollama <span class="ot">&lt;-</span> <span class="cf">function</span>(text) {</span>
+<span id="cb33-5"><a></a>  prompt <span class="ot">&lt;-</span> <span class="fu">paste</span>(<span class="st">&quot;Classify the sentiment of the following text as positive, negative, or neutral, and respond with only the label in lower case:&quot;</span>, text)</span>
+<span id="cb33-6"><a></a>  response <span class="ot">&lt;-</span> <span class="fu">generate</span>(<span class="at">model =</span> <span class="st">&quot;llama3.2:3b&quot;</span>, <span class="at">prompt =</span> prompt, <span class="at">output=</span><span class="st">&quot;text&quot;</span>)</span>
+<span id="cb33-7"><a></a>  <span class="fu">return</span>(response)</span>
+<span id="cb33-8"><a></a>}</span>
+<span id="cb33-9"><a></a></span>
+<span id="cb33-10"><a></a>real_comments <span class="ot">&lt;-</span> real_comments <span class="sc">%&gt;%</span></span>
+<span id="cb33-11"><a></a>  <span class="fu">mutate</span>(<span class="at">sentiment_ollama =</span> <span class="fu">map_chr</span>(text, get_sentiment_ollama))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 </div>
 </div>
