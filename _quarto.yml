@@ -1,0 +1,23 @@
+project:
+  type: website
+  output-dir: docs  # GitHub Pages publishes from `/docs`
+
+website:
+  title: "HKU Summer Programme"
+  navbar:
+    left:
+      - href: index.qmd
+        text: Home
+      - href: slide_link.qmd
+        text: Slides
+        
+format:
+  html:
+    theme:
+      - cosmo
+    css: styles.css
+    toc: true
+
+execute:
+  freeze: auto
+

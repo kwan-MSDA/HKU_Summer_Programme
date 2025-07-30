@@ -1,0 +1,886 @@
+---
+title: "Hands-On Introduction to Recommender Systems with R"
+subtitle: "Theme: AI and Society"
+author:
+    - name: KT Wong
+email: "kwanto@hku.hk"
+affiliation: "Faculty of Social Sciences, HKU"
+
+#abstract: |
+ #     The materials in this topic are drawn from @Chetty2020
+      
+date: today
+
+#bibliography: reference_bigdata.bib
+
+format:
+  revealjs:
+    theme: clean_42_rb.scss
+    #multiplex: True
+    chalkboard: True
+    slide-number: c/t
+    preview-links: auto
+    margin: 0.03
+    height: 1080
+    width: 1920
+    max-scale: 2
+    smaller: false
+    scrollable: true
+    incremental: TRUE
+    template-partials:
+       - title-slide.html
+    controls: true
+    code-fold: true
+    code-overflow: scroll
+    code-line-numbers: true
+    fig-asp: 0.618
+    
+include-in-header:
+  text: |
+      <style>
+      #title-slide .abstract {
+        font-size: 28px;
+        color: #F15D50;
+      }
+      </style>
+      
+engine: knitr
+
+knitr:
+  opts_chunk:
+    echo: false
+    message: false
+    warning: false
+    error: false
+    eval: false
+    
+fig-cap-location: bottom
+fig-width: 12
+#fig-height: 5
+#fig-dpi: 300
+lightbox: True
+---
+
+# Main Theme: **AI and Society** {visibility="uncounted"}
+
+**Hands-On Introduction to Recommender Systems with R**  
+**Audience:** High school students new to R  
+**Duration:** 2 hours  
+**Environment:** R and RStudio  
+
+::: notes
+
++ Welcome students, spark excitement about recommendation systems in everyday life (e.g., Netflix, Spotify).
+
++ Emphasize "AI and Society" theme: how recommendations shape our choices.
+
++ Ensure R, RStudio, and packages (`recommenderlab`, `tidyverse`, `proxy`, `topicmodels) are pre-installed.
+
++ Keep energy high, connect to students’ experiences (e.g., AI suggesting videos).
+
+:::
+
+## Why Recommender Systems Matter
+
++ **Why Interesting?**
+  + Power apps you use daily
+    + Netflix suggests shows
+    + TikTok picks videos
+    + Amazon recommends products
+  + Personalize experiences, making life easier and fun
+    + e.g. Spotify suggests songs you love based on your listening habits
+
+## Why Recommender System Matter
+
++ **Why Important?**
+  + Drive business and innovation
+    + Companies use recommendations to improve user satisfaction
+  + Shape society
+    + Influence what you watch, buy, or learn
+    + e.g. AI study apps suggest further references to help you learn better
+
+## Why Recommender System Matter
+
++ **Societal Impacts:**
+  + **Benefits**
+    + Discover new content, save time 
+      + e.g. finding a great travel app
+  + **Challenges**
+    + Privacy concerns 
+      + e.g. tracking your likes
+    + filter bubbles 
+      + e.g. biased news feeds
+      
++ Today: Build our own (toy) recommender system in R to see how it works!
+
+::: notes
+
+- **Content (6 min):** Engage with examples: "Ever wonder how Netflix knows you’d love that new show?"
+
+- Highlight excitement: "You’ll create AI suggestions today!" and importance: "Recommendations affect society."
+
+- Discuss pros (personalization) and cons (privacy). Ask: "What’s a recommendation you got recently?"
+
+- **Presenter Tips:** Use visuals (e.g., show Netflix/TikTok screenshots if possible). Keep high energy to set tone.
+
+- Transition: "Let’s dive into building a recommender for AI products!"
+
+- Connect to real life: "How does TikTok know what videos you like?"
+
+- Highlight pros (personalization) and cons (privacy, bias).
+
+- Set stage for discussions: How do recommendations affect society?
+
+- Keep brief to move to hands-on tasks
+
+:::
+
+
+## Overview
+
++ this workshop introduces **recommender systems** using R in RStudio
+
++ Task: Analyze user ratings for AI-related products (e.g. apps, tools)
+  + Learn basic R commands
+  + Build a recommender system --- explore the underlying mechanism
+
++ Roadmap
+  + Background on Recommender Systems
+  + Hands-on tasks
+  + Compare collaborative and content-based methods
+  + Discuss AI’s societal role
+
++ **Learning Goals:**
+  + Understand recommender systems in AI
+  + Use R for building and evaluating recommendations
+  + Connect findings to societal impacts
+
+::: notes
+
+- **Prerequisites:** No R experience needed. Laptops with R, RStudio, packages.
+
+- **Materials:** Dataset in code (user ratings for AI products).
+
+- Highlight fun of personalizing recommendations and societal relevance (e.g., shopping apps).
+
+- Keep intro brief to dive into hands-on tasks.
+
+:::
+
+## Background: Recommender Systems and AI in Society
+
++ **What are Recommender Systems?**
+  + AI systems suggest items based on **user preferences**
+    + e.g., Netflix movies, Amazon products, Spotify songs
+  + Types:
+    + **Collaborative Filtering**: Uses user behavior (e.g. ratings)
+    + **Content-Based**: Uses item features (e.g. app categories)
+    + **Factor Models**: Finds hidden patterns in ratings
+    + **LDA**: Uses topic modeling to group items by themes
+  + Used in apps, shopping, social media
+
++ **How They Work:**
+  + **Collaborative**: Finds similar users/items (e.g. "People like you liked this app")
+  + **Content-Based**: Matches item features to user interests
+  + **Factor Models**: Breaks ratings into latent factors (e.g. user preferences for education apps)
+  + **LDA**: Identifies topics in items (e.g. StudyApp is "educational")
+
++ e.g. If you buy a product (book), get similar product (book) suggestions
+
++ Focus on the working of collaborative filtering, introduce content-based briefly when time allows
+
+::: notes
+
+- Explain simply: "Like a friend suggesting movies you’d love."
+
+- Relate to students: "Ever get YouTube video recommendations?"
+
+- Focus on collaborative filtering today, introduce content-based briefly.
+
+- Mention we’ll compare both to see differences.
+
+- Transition to hands-on: "Let’s build recommenders for AI products!"
+
+:::
+
+# Hands-on Workshop {visibility="uncounted"}
+
+## Step 1: Introduction and Setup 
+
+**Objective:** Set up RStudio
+
++ **Task 1.1: Open RStudio**
+  + Open RStudio, create new R script: `File > New File > R Script`
+
++ **Task 1.2: Install Packages**
+
+. . .
+
+```{r}
+#| echo: True
+
+install.packages(c("tidyverse", "recommenderlab", "proxy", "topicmodels", "text2vec"))
+
+```
+
+::: notes
+
++ 8 minutes
+
++ Content: Explain recommendation systems: "AI suggests things you might like." Introduce RStudio (console, script).
+
++ Presenter Tips: Assist with RStudio setup. Ensure packages are pre-installed to save time.
+
++ Practice (2 min): Run print("Hello, I’m learning R!") in console. Guess what an AI app recommendation might look like.
+
++ Discussion (1 min): Why are recommendations useful? Example: AI study apps.
+
++ Keep pace brisk to fit 2 hours
+
+:::
+
+## Step 2: Loading Tools and Data
+
+**Objective**: Load packages and dataset
+
++ Dataset: 30 users rating 10 AI products (1–5 scale)
+
+. . .
+
+```{r}
+#| echo: True
+
+library(tidyverse)
+library(recommenderlab)
+library(proxy)
+
+
+ratings <- matrix(sample(c(NA, 1:5), 300, replace = TRUE, prob = c(0.7, 0.1, 0.1, 0.1, 0.05, 0.05)), 
+                 nrow = 30, ncol = 10)
+
+colnames(ratings) <- c("StudyApp", "ChatBot", "ArtGen", "CodeTool", "VoiceAI", 
+                       "HealthAI", "GameAI", "MusicAI", "CarAI", "TutorAI")
+
+rownames(ratings) <- paste0("User", 1:30)
+
+ratings <- as(ratings, "realRatingMatrix")
+
+```
+
++ **Task 2.1: Run code (Ctrl+Enter)**
+
++ **Task 2.2: take a look at the ratings matrix** 
+    + Run `View(as(ratings, "matrix"))`
+
+
+::: notes
+
++ Content: Introduce dataset: "Ratings for AI products like study apps."
+
++ Presenter Tips: Show ratings in RStudio (View(as(ratings, "matrix"))). Explain NA means no rating.
+
++ Practice (2 min): Run dim(ratings). How many users/products?
+
++ Discussion (1 min): How do ratings reflect AI preferences? Example: AI in gaming.
+
++ Assist with package errors; move quickly
+
+:::
+
+## Step 3: Exploring the Dataset
+
+**Objective**: Understand dataset structure
+
++ the dateset is a matrix of user ratings for AI products
+
++ Task 2.3: Check dimensions and first few ratings
+  + Run `dim(ratings)`
+  + Run `colnames(ratings)`
+  
+. . .
+
+```{r}
+#| echo: True
+#| eval: False
+
+dim(ratings)
+colnames(ratings)
+
+```
+
++ **Task 3.1: look at the subset of the matrix**
+  + Run `ratings@data[1:3, 1:3]`
+
++ **Task 3.2: Which user rated most?**
+  + Run `rowSums(ratings@data, na.rm = TRUE)[1:5]`
+  
+::: notes
+
++ 7 minutes
+
++ Content: Explain: "Matrix shows user preferences for AI tools."
+
++ Presenter Tips: Show first few ratings. Highlight sparsity (many NAs).
+
++ Practice (2 min): Run rowSums(ratings@data, na.rm = TRUE)[1:5]. Which user rated most?
+
++ Discussion (1 min): Why explore ratings? How do they show AI’s role in society?
+
++ Keep tasks simple to stay on track
+
+:::
+
+## Step 4: Building a Collaborative Filtering Model 
+
+**Objective**: Create user-based collaborative filtering model
+
++ Recommends products based on similar users’ ratings
+
+. . .
+
+```{r}
+#| echo: True
+#| eval: False
+
+recommender_ubcf <- Recommender(ratings, method = "UBCF", 
+                               param = list(normalize = "center", 
+                                            method = "cosine"))
+
+```
+
++ **Task 4.1: Run code**
+
++ **Task 4.2: Check model details**
+  + Run `getModel(recommender)$description`
+
+::: notes
+
++ 10 minutes
+
++ Content
+  + Explain: "Finds users with similar ratings to suggest products."
+  + Presenter Tips
+    + Describe UBCF: "Like suggesting a game because your friend likes it."
+  + Practice (3 min): Check model details. Guess what StudyApp’s rating might be for User1.
+
++ Discussion (2 min): 
+  + How does collaborative filtering help users? Example: App suggestions.
+
++ Ensure code runs smoothly
+
+:::
+
+## Step 5: Generating Recommendations 
+
+**Objective**: Predict recommendations for users
+
++ Suggest top AI products for users
+
+. . .
+
+```{r}
+#| echo: True
+
+predictions_ubcf <- predict(recommender_ubcf, ratings[1:5], n = 2)
+
+pred_list_ubcf <- as(predictions_ubcf, "list")
+
+
+```
+
+
++ **Task 5.1: see User1’s recommendations**
+  + Run `pred_list[[1]]`
+
++ **Task 5.2: Check recommendations for User2**
+  + Run `pred_list[[2]]`
+
+
+::: notes
+
++ 10 minutes
+
++ Content
+  + Explain: "Predicts products users might like."
+  + Presenter Tips: Show recommendations 
+    + e.g., User1 gets StudyApp)
+    + Relate to Netflix
+
++ Practice (3 min)
+  + Note User1’s top recommendation. Why might it fit?
+
++ Discussion (2 min)
+  + How do recommendations improve AI app use?
+    + Example: Study tools.
+
++ Assist with output interpretation
+
+:::
+
+## Step 6: Content-Based Approach
+
+**Objective**: Compare with content-based filtering
+
++ Use product features
+  + e.g., categories: Education, Health
+
+. . .
+
+```{r}
+#| echo: True
+
+# Product features (simplified: 1 = has feature, 0 = doesn’t)
+
+features <- matrix(c(
+  1, 0, 0, 1, 0, 0, 0, 0, 0, 1,  # StudyApp: Education, Coding
+  0, 1, 0, 0, 1, 0, 0, 0, 0, 0,  # ChatBot: Interaction
+  0, 0, 1, 0, 0, 0, 1, 1, 0, 0,  # ArtGen: Creativity, Gaming
+  1, 0, 0, 1, 0, 0, 0, 0, 0, 0,  # CodeTool: Education, Coding
+  0, 1, 0, 0, 1, 0, 0, 0, 0, 0,  # VoiceAI: Interaction
+  0, 0, 0, 0, 0, 1, 0, 0, 0, 0,  # HealthAI: Health
+  0, 0, 1, 0, 0, 0, 1, 0, 0, 0,  # GameAI: Creativity, Gaming
+  0, 0, 1, 0, 0, 0, 0, 1, 0, 0,  # MusicAI: Creativity
+  0, 0, 0, 0, 0, 0, 0, 0, 1, 0,  # CarAI: Driving
+  1, 0, 0, 0, 0, 0, 0, 0, 0, 1   # TutorAI: Education
+  ), 
+  nrow = 10, byrow = TRUE)
+
+colnames(features) <- c("Education", "Interaction", "Creativity", "Coding", 
+                        "Voice", "Health", "Gaming", "Music", "Driving", "Tutoring")
+
+rownames(features) <- colnames(ratings)
+
+# Cosine similarity for content-based recommendations
+sim_matrix <- as.matrix(simil(features, method = "cosine"))
+
+content_recs <- apply(sim_matrix, 1, function(x) names(sort(x, decreasing = TRUE)[2]))
+
+```
+
+
++ **Task 6.1: Check "StudyApp"**
+  + Run `content_recs["StudyApp"]`
+
++ **Task 6.2: Check "ChatBot"**
+  + Run `content_recs["ChatBot"]`
+
+::: notes
+
++ 10 minutes
+
++ Content: Explain: "Recommends based on product features, like app categories."
+
++ Presenter Tips: Show similarity (e.g., StudyApp → TutorAI). Compare to UBCF.
+
++ Practice (3 min): Note StudyApp’s similar product. Why similar?
+
++ Discussion (2 min): How does content-based filtering differ? Example: Health apps.
+
++ Simplify cosine similarity explanation: "Matches similar features"
+
+:::
+
+## Step 7: Evaluating Recommendations
+
+**Objective: Assess recommendation quality**
+
++ Check if predictions match user interests
+
+. . .
+
+```{r}
+#| echo: True
+#| eval: False
+
+# Split data for evaluation
+train <- ratings[1:20]
+test <- ratings[21:30]
+
+recommender <- Recommender(train, method = "UBCF", 
+                          param = list(normalize = "center", 
+                                       method = "cosine"))
+
+pred_test <- predict(recommender, test, n = 2)
+
+```
+
+
++ **Task 7.1: Check User21’s predictions**
+  + Run `as(pred_test, "list")[[1]]`
+
++ **Task 7.2: Compare to actual ratings**
+  + Compare to `as(test, "matrix")[1, ]`
+
+::: notes
+
++ 10 minutes
+
++ Content: Explain
+  + "Test if recommendations match actual ratings."
+
++ Presenter Tips
+  + Show test user’s predictions vs. actual ratings.
+
++ Practice
+  + Check User21’s recommendations
+  + Do they fit?
+
++ Discussion
+  + Why evaluate accuracy?
+  + Example: Bad app suggestions
+
++ Keep evaluation simple for beginners
+
+:::
+
+## Step 8: Visualizing and Discussing Results
+
+**Objective: Visualize recommendations, compare methods, discuss societal impact**
+
++ Plot top recommendations; compare collaborative vs. content-based
+
++ Collaborative Filtering Plot:
+
+. . .
+
+```{r}
+#| echo: True
+#| eval: False
+
+top_recs <- as(predictions, "list")[[1]]
+
+rec_data <- tibble(Product = top_recs, Score = 1:length(top_recs))
+
+ggplot(rec_data, aes(x = reorder(Product, Score), y = Score)) +
+  geom_bar(stat = "identity", fill = "blue") +
+  labs(title = "Top Recommendations for User1 (Collaborative)", x = "Product", y = "Rank") +
+  theme_minimal()
+
+```
+
+
++ Comparison Plot
+
+. . .
+
+```{r}
+#| echo: True
+#| eval: False
+
+comparison <- tibble(
+  Product = c(colnames(ratings)[1:2], content_recs[1:2]),
+  Method = rep(c("Collaborative", "Content-Based"), each = 2),
+  Rank = rep(1:2, 2)
+  )
+
+ggplot(comparison, 
+       aes(x = Product, y = Rank, fill = Method)) +
+  geom_bar(stat = "identity", position = "dodge") +
+  labs(title = "Recommendation Comparison", 
+       x = "Product", 
+       y = "Rank") +
+  scale_fill_manual(values = c("#1f77b4", "#ff7f0e")) +
+  theme_minimal()
+
+```
+
++ **Task 8.1: Run collaborative plot**
+  + Note User1’s top product
+
++ **Task 8.2: Run comparison plot**
+
++ Compare methods for StudyApp
+
++ **Task 8.3: Check differences**
+  + Run `tibble(Collaborative = pred_list[[1]], ContentBased = content_recs[pred_list[[1]]])`
+
+::: notes
+
++ 16 minutes
+
++ StudyApp: Collaborative (user-driven) vs. Content-Based (feature-driven)
+
++ ChatBot: May differ due to interaction features
+
++ Why do methods differ?
+  + Collaborative uses ratings, content-based uses features
+  + Societal impacts
+    + Personalization vs. privacy filter bubbles
+
++ How can recommendations improve AI use in society?
+
++ Content
+  + Explain
+    + "Collaborative uses user similarity; content-based uses product features"
+  
+  + Presenter Tips
+    + Show plots
+      + highlight StudyApp differences
+        + e.g., collaborative suggests TutorAI, content-based suggests CodeTool
+  + Practice (5 min)
+    + Run plots, check differences for StudyApp/ChatBot
+    
++ Discussion (6 min):
+ How do recommendations affect choices? 
+  + e.g. Biased social media feeds
+  + Limits (privacy concerns)
+  
+:::
+
+## Step 9: Factor Models for Recommendations
+
+**Objective:** Use matrix factorization for recommendations
+
++  Breaks ratings into latent factors (e.g., user preferences for education apps)
+
+. . .
+
+```{r}
+#| echo: True
+
+recommender_svd <- Recommender(ratings, method = "SVD", 
+                              param = list(k = 5))  # 5 latent factors
+
+predictions_svd <- predict(recommender_svd, ratings[1:5], n = 2)
+
+pred_list_svd <- as(predictions_svd, "list")
+
+```
+
++ **Task 9.1: Check User1’s SVD recommendations**
+  + Run `pred_list_svd[[1]]`
+
++ **Task 9.2: Compare User1’s UBCF vs. SVD**
+  + Run `c(UBCF = pred_list_ubcf[[1]], SVD = pred_list_svd[[1]])`
+
+::: notes
+
++ 10 minutes
+
++ **Content:** Explain: "Factor models find hidden patterns, like preferring educational apps."
+
++ **Presenter Tips:** Simplify SVD: "Breaks ratings into user/item traits." Show User1’s differences.
+
++ **Practice (3 min):** Check User1’s SVD recommendations. Note differences from UBCF.
+
++ **Discussion (2 min):** Why might SVD differ? Example: Capturing broader preferences.
+
++ Keep explanation simple: "Like grouping apps by hidden themes."
+
+:::
+
+## Step 10: LDA for Recommendations
+
+**Objective:** Use Latent Dirichlet Allocation for recommendations
+
++ Models items as topics (e.g., "educational" or "creative") based on ratings
+
+. . . 
+
+```{r}
+#| echo: True
+
+# Convert ratings to binary (rated = 1, not rated = 0) for LDA
+ratings_binary <- ratings
+ratings_binary@data[!is.na(ratings_binary@data)] <- 1
+ratings_binary@data[is.na(ratings_binary@data)] <- 0
+
+# Run LDA with 5 topics
+lda_model <- LDA(ratings_binary@data, k = 5, control = list(seed = 123))
+item_topics <- posterior(lda_model)$topics
+
+# Recommend items with similar topics for User1
+user1_topics <- item_topics[1, ]
+lda_recs <- colnames(ratings)[order(item_topics[1, ], decreasing = TRUE)[1:2]]
+
+```
+
++ **Task 10.1: Run `lda_recs`**
++ **Task 10.2: Compare User1’s UBCF vs. LDA**
+  + Run `c(UBCF = pred_list_ubcf[[1]], LDA = lda_recs)`
+
+::: notes
+
++  10 minutes
+
++ **Content:** Explain: "LDA groups items by themes, like ‘education’ or ‘gaming.’"
+
++ **Presenter Tips:** Simplify: "Like sorting apps into categories based on ratings." Show User1’s LDA recs.
+
++ **Practice (3 min):** Check LDA recommendations. Note differences from UBCF.
+
++ **Discussion (2 min):** Why might LDA differ? Example: Theme-based suggestions.
+
++ Simplify LDA: "Finds what apps have in common."
+
+:::
+
+## Step 11: Visualizing 
+
+**Objective:** Visualize recommendations, compare methods, discuss societal impact
+
++ Plot top recommendations; compare UBCF, SVD, and LDA
+
++ **Collaborative Filtering Plot:**
+
+. . .
+
+```{r}
+#| echo: True
+#| eval: False
+
+top_recs_ubcf <- pred_list_ubcf[[1]]
+
+rec_data <- tibble(Product = top_recs_ubcf, Score = 1:length(top_recs_ubcf))
+
+ggplot(rec_data, 
+       aes(x = reorder(Product, Score), y = Score)) +
+  geom_bar(stat = "identity", fill = "blue") +
+  labs(title = "Top Recommendations for User1 (UBCF)", 
+       x = "Product", y = "Rank") +
+  theme_minimal()
+
+```
+
++ **Comparison Plot:**
+
+. . .
+
+```{r}
+#| echo: True
+#| eval: False
+
+comparison <- tibble(
+  Product = c(pred_list_ubcf[[1]],  pred_list_svd[[1]], lda_recs),
+  Method = rep(c("UBCF", "SVD", "LDA"), each = 2),
+  Rank = rep(1:2, 3)
+)
+
+ggplot(comparison,
+       aes(x = Product, y = Rank, fill = Method)) +
+  geom_bar(stat = "identity", position = "dodge") +
+  labs(title = "Recommendation Comparison for User1", x = "Product", y = "Rank") +
+  scale_fill_manual(values = c("#1f77b4", "#ff7f0e", "#2ca02c")) +
+  theme_minimal()
+
+```
+
++ **Task 8.1:** Run UBCF plot. Note User1’s top product
+  + Run `top_recs_ubcf`
+
++ **Task 8.2:** Run comparison plot. Compare methods for StudyApp
+  + Run `comparison`
+
++ **Task 8.3: Check differences**
+  + Run  `tibble(UBCF = pred_list_ubcf[[1]], SVD = pred_list_svd[[1]], LDA = lda_recs)`
+    + StudyApp: UBCF (user similarity), SVD (latent factors), LDA (topic-based)
+    + ChatBot: May differ due to thematic grouping in LDA
+
+::: notes
+
++ 15 minutes
+
++ **Content:** Explain: "UBCF uses user similarity, SVD finds patterns, LDA groups by themes."
+
++ **Presenter Tips:** Show plots; highlight StudyApp differences (e.g., UBCF vs. LDA). Pre-compute LDA if slow.
+
++ **Practice (4 min):** Run plots, check differences for StudyApp/ChatBot.
+
++ **Discussion (5 min):** Discuss: How do recommendations affect choices? Example: Biased social media feeds. Limits (privacy concerns)?
+
++ **Takeaway:** Recommendation systems personalize AI but raise ethical questions.
+
++  **Resources:** R for Data Science (https://r4ds.had.co.nz), Recommender Systems Handbook, Kaggle datasets.
+
++ Wrap up, encourage exploring movie datasets.
+
+:::
+
+## Discussion
+
++ Why do methods differ? (UBCF: user similarity, SVD: hidden patterns, LDA: themes)
+
++ Societal impacts: Personalization vs. privacy, filter bubbles
+
++ How can recommendations improve AI use in society?
+
+::: notes
+
++ 5 min
+
++ Facilitator Notes {visibility="hidden"}
+  + **Preparation:** 
+    + Install R, RStudio, packages (`tidyverse`, `recommenderlab`, `topicmodels`)
+    + Pre-test code to avoid errors. Pre-compute LDA if hardware is limited.
+  + **Dataset:** 
+    + 30 users, 10 AI products, sparse ratings matrix to mimic real-world data
+  + **Pacing:** Total ~120 min 
+    + Why: 6 min
+    + Overview: 4 min
+    + Background: 9 min
+    + Steps 1–3: 7 min each
+    + Steps 4–7: 10 min each
+    + Step 8: 14 min
+    + Skip Task 6.2 or 7.2 if needed
+
++ **Engagement:**
+  + Relate to students’ lives (e.g., app suggestions)
+  + Discuss privacy in Step 8
+
++ **Troubleshooting:** Assist with RStudio navigation, package installation, LDA convergence issues
+
+```
+
+
+<!--
+
+
+
+## Takeaway
+
++ Recommendation systems personalize AI but raise ethical questions
+
+## Resources
+
++ R for Data Science (https://r4ds.had.co.nz)
+
++ Recommender Systems Handbook
+
++ Kaggle datasets
+
+::: notes
+
++ Wrap up, encourage exploring other datasets (e.g., movies)
+
++ Facilitator Notes
+  + Preparation
+    + Install R, RStudio, packages (tidyverse, recommenderlab, proxy). Pre-test code to avoid errors
+  + Dataset: 30 users, 10 AI products, sparse ratings matrix to mimic real-world data
+  + Pacing: Total ~120 min
+    + Steps 1–3: 8 min each
+    + Steps 4–7: 10 min each
+    + Step 8: 16 min
+  + Skip Task 6.2 or 7.2 if needed
+  + Engagement
+    + Relate to students’ lives
+      + e.g., app suggestions
+    + Discuss privacy in Step 8
+
++ Troubleshooting
+  + Assist with RStudio navigation, package installation, and matrix operations
+
+:::
+
+## Conclusion
+
++ Recap: Built recommendation system using R
+  + Explored collaborative and content-based methods
+  + Discussed societal impacts of AI recommendations
+  
++ Encourage further exploration of recommendation systems
+
++ Thank students for participation
+  + Invite questions and feedback
+  
+-->
+

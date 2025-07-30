@@ -1,0 +1,409 @@
+/*-- scss:defaults --*/
+
+// Custom colours and variables
+
+$jet: #131516;
+$accent: #107895;
+$accent2: #9a2515;
+// $accent2: #e64173;
+$right-arrow: "\2192"; // Unicode character for right arrow
+
+.inline-math {
+  font-size: 80%; /* Adjust the value to your desired size */
+}
+
+.display-math {
+  font-size: 100%; /* Adjust the value to your desired size */
+  margin: 0; /* Reset margins */
+  padding: 0; /* Reset padding */
+  margin-top: 1.28em; /* Adjust the value to increase/decrease space before */
+  margin-bottom: 1.28em; /* Adjust the value to increase/decrease space after */
+}
+
+code.sourceCode {
+  font-size: 168%;
+}
+
+code.sourceCode div.cell-output-stdout {
+  font-size: 168%;
+  width: 100%;
+}
+
+div.cell-output-stdout {
+  font-size: 168%;
+  width: 100%;
+}
+
+blockquote {
+    border-left: solid 5px lightgray;
+    padding-left: 1em;
+    margin: 0 ; /* Remove default margin to avoid extra space */
+    line-height: 1.5; /* Consistent line height with your slide text; adjust as needed */
+    display: flex; /* Makes the blockquote hug the text content tightly */
+    vertical-align: middle;
+    border-radius: 0; /* Removes any border radius */
+    min-height: 1.2em;  
+    align-items: center; /* Vertically centers the text with the bar */
+}
+
+
+blockquote p {
+    margin: 0;
+    padding: 0;
+    line-height: 1.5; /* Consistent line height with your slide text; adjust as needed */
+    font-size: 1.18em; /* Adjust the font size as needed */
+    font-weight: lighter; /* Lighter font weight for consistency */
+    color: $jet; /* Use the same color as the slide text */
+    font-family: "Roboto", sans-serif; /* Use the same font family as the slide text */
+    display: block !important; /* Makes the text inline to avoid extra space */
+    vertical-align: middle; /* Aligns the text vertically with the blockquote */
+    margin-left: 8px; /* Adds a small space between the bar and the text */
+    margin-right: 8px; /* Adds a small space after the text */
+    padding: 0; /* Removes any padding around the text */
+    background-color: transparent; /* Ensures the background is transparent */
+    border-radius: 0; /* Removes any border radius */
+    box-shadow: none; /* Removes any box shadow */
+    text-align: left; /* Aligns the text to the left */
+    width: auto; /* Allows the blockquote to hug the text tightly */
+    max-width: 100%; /* Ensures the blockquote does not overflow the slide */
+    overflow-wrap: break-word; /* Allows long words to break and wrap within the blockquote */
+    word-wrap: break-word; /* Ensures long words wrap correctly */
+    white-space: normal; /* Allows the text to wrap normally */
+}
+
+
+.reveal pre {
+  width: 100% !important;
+  white-space: pre-wrap;
+  overflow-x: auto;
+}
+
+
+/*
+.reveal code {
+  width: 100% !important;
+  height: 88%;
+  display: block;
+}
+*/
+
+//pre, code, .sourceCode {
+//  font-size: 1.18rem;
+//}
+
+// fonts
+
+/*
+Note: This theme uses the Roboto font family, which it imports from Google
+  Fonts to ensure consistent weighting in addition to availability. While
+  you can use a local installation of Roboto, this is generally not 
+  recommended since the weighting will likely be wrong (probably too
+  light). OTOH, importing from Google Fonts can cause some issues in
+  certain secure environments due the external CDN (see:
+  https://github.com/grantmcdermott/quarto-revealjs-clean/issues/7). If
+  that's the case for you, simply comment out the `@import url(...)` line
+  below and it will default for the default Sans Serif font on your system
+  (e.g., Helvetica on a Mac). Circling back to the earlier point about
+  preserving consistent font weights, you may also wish to remove "Roboto"
+  from the choice set if the family is installed locally.
+*/
+@import url(https://fonts.googleapis.com/css?family=Roboto:200,200i,300,300i,350,350i,400,400i);
+$font-family-sans-serif: "Roboto", sans-serif !default;
+$presentation-heading-font: "Roboto", sans-serif !default;
+
+$presentation-heading-color: $jet !default;
+$presentation-heading-font-weight: lighter;
+//$presentation-heading-line-height: 2;
+//$presentation-block-margin: 28px;
+$presentation-font-size-root: 42px;
+
+// colors
+//$body-bg: #f0f1eb !default;
+$body-color: $jet !default;
+$link-color: $accent !default;
+$selection-bg: #26351c !default;
+
+
+/*-- scss:rules --*/
+
+.reveal a {
+  line-height: 1.28em;
+}
+
+.reveal p {
+  // font-weight: 300;
+  font-weight: lighter;
+  margin-top: 1.28em;
+}
+
+
+// title and headings
+
+#title-slide {
+  text-align: left;
+
+  .title {
+    color: $body-color;
+    font-size: 1.8em;
+    // font-weight: 350;
+    font-weight: lighter;
+  }
+
+  .subtitle {
+    color: $accent;
+    font-style: italic;
+    margin-top: 0em;
+    font-weight: lighter;
+  }
+
+  .institute,
+  .affiliation,
+  .quarto-title-affiliation,
+  .quarto-title-author-email {
+    font-style: italic;
+    font-size: 0.68em;
+    // color: #7F7F7F;
+  }
+
+  .quarto-title-abstract,
+  .abstract {
+	  font-size: 22px;
+	  font-style: italic;
+	  margin-top: 28px;
+  }
+
+  .author,
+  .quarto-title-author-name {
+    color: $body-color;
+  }
+
+  .quarto-title-authors {
+    display: flex;
+    justify-content: left;
+
+    .quarto-title-author {
+      padding-left: 0em;
+      padding-right: 0em;
+      width: 100%;
+    }
+  }
+
+}
+
+
+.reveal h2 {
+  // font-weight: 350;
+  font-weight: lighter;
+  font-size: 1.8em;
+}
+
+.reveal h3 {
+  color: $accent;
+  font-style: italic;
+  // font-weight: 350;
+  font-weight: lighter;
+  font-size: 1.18em;
+}
+
+.reveal h4 {
+  color: $accent2;
+  // font-weight: 350;
+  font-weight: normal;
+  margin-top: 1.08em;
+}
+
+// alerts etc.
+
+.alert {
+  color: $accent2;
+}
+
+.r {
+  color: #FF3131;
+}
+
+.v {
+    color: #7F00FF;
+}
+
+.b {
+  color: #80b3ff;
+}
+
+.fg {
+  color: var(--col, $jet);
+}
+
+.bg {
+  background-color: var(--col, #fff);
+  padding: 0.1em;
+  border-radius: 5px;
+  display: inline-block;
+}
+
+.large {
+  font-size: 1.18em;
+}
+
+.small {
+  font-size: 0.8em;
+}
+
+// lists
+
+// Unordered lists
+
+.reveal ul {
+  // font-weight: 300;
+  font-weight: lighter;
+  padding-left: 16px;
+
+  li::marker {
+    color: mix($accent, white, 70%);
+    font-size: 50px;
+  }
+}
+
+.reveal ul ul {
+  list-style: none;
+
+  li:before {
+    content: '▶';
+    color: mix($accent, white, 60%);
+    font-size: 28px;
+    display: inline-block;
+    margin-left: -1em;
+    margin-right: 0.5em;
+  }
+}
+
+.reveal ul ul ul {
+  list-style: none;
+
+  li:before {
+    //content: $right-arrow;
+    content: '▪';
+    color: mix($accent, white, 60%);
+    display: inline-block;
+    font-size: 50px;
+    //width: 1em;
+    margin-left: -1em;
+    margin-right: 0.2em;
+  }
+}
+
+// Ordered lists
+
+.reveal ol {
+  // font-weight: 300;
+  font-weight: lighter;
+  padding-left: 16px;
+
+  li::marker {
+    color: $accent;
+  }
+}
+
+// Move "hamburger" menu button to top right
+
+.reveal .slide-menu-button {
+  position: fixed;
+  top: 38px;
+  right: 0;
+  display: flex;
+  justify-content: flex-end;
+  align-items: flex-start;
+  pointer-events: none;
+}
+
+.reveal .slide-menu-button > * {
+  pointer-events: auto;
+}
+
+
+// Same for chalkboard buttons (with an offset)
+
+.reveal .slide-chalkboard-buttons {
+  position: fixed;
+  top: 28px;
+  right: 28px;
+  display: flex;
+  justify-content: flex-end;
+  align-items: flex-start;
+  pointer-events: none;
+}
+
+.reveal .slide-chalkboard-buttons > * {
+  pointer-events: auto;
+}
+
+// Beamer-style button link environment
+
+.button {
+  display: inline-block;
+  padding: 8px 18px;
+  margin-bottom: 0;
+  font-size: 18px;
+  font-weight: 400;
+  line-height: 1.42857143;
+  text-align: center;
+  white-space: nowrap;
+  vertical-align: middle;
+  cursor: pointer;
+  background-color: $accent;
+  border: 1px solid $accent;
+  color: #fff !important;
+  text-decoration: none;
+  border-radius: 4px;
+  transition: all 0.2s ease-in-out;
+}
+
+.button:hover {
+  background-color: #0056b3;
+  border-color: #0056b3;
+}
+
+.button::before {
+  content: "▶";
+  margin-right: 5px;
+}
+
+// Special catch for etable environment to ensure these table images
+// don't overflow the slide.
+// See: https://lrberge.github.io/fixest/articles/etable_new_features.html
+
+.etable {
+  width: 100%;
+  height: calc(100% - 3em); /* Adjust 3em based on the height of your header, if necessary */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.etable img {
+  max-width: 100%;
+  max-height: 100%;
+  width: auto;
+  height: auto;
+  object-fit: contain;
+}
+
+table {
+  font-size: 38px; /* Adjust this value to change the font size */
+  font-family: Arial, sans-serif; /* Change the font family as needed */
+  border-collapse: collapse;
+  width: 100%;
+  border-top: 5px solid #dddddd; /* Border at the top of the table */
+  border-bottom: 5px solid #dddddd; /* Border at the bottom of the table */
+}
+
+th, td {
+  border: 2px solid #dddddd;
+  text-align: left;
+  padding: 8px;
+}
+
+th {
+  background-color: #f2f2f2; /* Light grey background for header */
+  border-bottom: 5px solid #000000; /* Thicker line to separate header and content */
+}

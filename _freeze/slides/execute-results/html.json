@@ -1,0 +1,17 @@
+{
+  "hash": "927c1ca582a30a9c19de5452fddddbe3",
+  "result": {
+    "engine": "knitr",
+    "markdown": "---\ntitle: \"Slides\"\n---\n\n\n\n\n\n\n\n\n\n+ Some R example\n\n\n\n\n\n\n\n\n::: {.cell}\n\n```{.r .cell-code}\ndata(mtcars)\n\nlibrary(ggplot2)\n\nggplot(mtcars, aes(x = wt, y = mpg)) +\n  geom_point() +\n  labs(title = \"Scatter plot of MPG vs Weight\",\n       x = \"Weight (1000 lbs)\",\n       y = \"Miles per Gallon (MPG)\")\n```\n\n::: {.cell-output-display}\n![](slides_files/figure-html/unnamed-chunk-1-1.png){width=672}\n:::\n:::",
+    "supporting": [
+      "slides_files"
+    ],
+    "filters": [
+      "rmarkdown/pagebreak.lua"
+    ],
+    "includes": {},
+    "engineDependencies": {},
+    "preserve": {},
+    "postProcess": true
+  }
+}

@@ -1,0 +1,1380 @@
+---
+title: Hands-On Introduction to Sentiment Analysis with R
+subtitle: "Theme: AI and Society"
+author:
+    - name: KT Wong
+email: "kwanto@hku.hk"
+affiliation: "Faculty of Social Sciences, HKU"
+
+#abstract: |
+ #     The materials in this topic are drawn from @Chetty2020
+      
+ 
+date: today
+
+#bibliography: reference_bigdata.bib
+
+format:
+  revealjs:
+    theme: clean_42_rb.scss
+    self-contained-math: true
+    embed-resources: true
+    chalkboard: false
+    multiplex: false
+    slide-number: c/t
+    preview-links: auto
+    margin: 0.03
+    height: 1080
+    width: 1920
+    max-scale: 2
+    smaller: false
+    scrollable: true
+    incremental: TRUE
+    template-partials:
+       - title-slide.html
+    controls: true
+    touch: false
+    code-fold: true
+    code-overflow: scroll
+    code-line-numbers: true
+    fig-asp: 0.618
+    html-math-method:
+      method: mathjax
+      url: "https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"
+    
+include-in-header:
+  text: |
+      <style>
+      .reveal pre, .reveal pre code, .reveal .sourceCode {
+        font-size: 24px !important;
+      }
+      </style>
+      
+# execute:
+#   cache: TRUE
+#   dev: "cairo_png"  # Use cairo_png device
+#   python: "C:/Users/ktwong/AppData/Local/Programs/Python/Python312/python.exe"
+   
+
+engine: knitr
+#engine: jupyter
+#kernal: python3
+
+knitr:
+  opts_chunk:
+    echo: false
+    
+fig-cap-location: bottom
+fig-width: 12
+#fig-height: 5
+#fig-dpi: 300
+lightbox: True
+---
+
+# Main theme: **AI and Society** {visibility="uncounted"}
+
+**Hands-On:** Introduction to Sentiment Analysis with R
+
+**Audience:** High school students new to R  
+
+**Duration:** 2 hours  
+
+**Environment:** R and RStudio  
+
+## Overview
+
++ This 2-hour workshop introduces high school students to **sentiment analysis** using R in RStudio
+
++ we will analyze social media comments about AI’s societal impact
+  + learning basic R commands
+  + exploring how sentiment analysis reveals public opinions
+  
++ Roadmap
+  + background on sentiment analysis
+  + hands-on tasks
+  + discussions linking AI to society
+
++ **Learning Goals:**
+  + Understand sentiment analysis and how AI can enhance it
+  + Learn basic R commands for text analysis
+  + Analyze sentiments in comments about AI’s societal impact
+  + Discuss how sentiment analysis informs AI’s role in society
+
+::: notes
+
+**Prerequisites:** No R experience needed. Students need R and RStudio installed.
+
+**Materials:** Laptops with R and RStudio, a simple dataset (provided in code).
+
+:::
+
+## Background: Sentiment Analysis and AI in Society
+
++ What is Sentiment Analysis?
+  + Sentiment analysis is an AI technique that identifies emotions in text
+    + commonly label them
+      + positive 
+        + e.g. I love this! 
+      + negative 
+        + e.g. This is scary
+      + neutral
+        + e.g. It’s fine
+        
++ it is used to understand public opinions/public attitudes
+  + e.g. how people feel about AI in education, jobs, or healthcare
+
+## Background: Sentiment Analysis and AI in Society
+
++ **How it Works:**  
+  + **Lexicon-based**
+    + Uses a dictionary to assign scores to words
+      + e.g., awesome = +3, worried = -2
+    + We mainly focus on this approach today for simplicity
+
+  + **Machine Learning-based**
+    + Trains machine learning models on labeled data to predict sentiment
+      + e.g., "I love AI!" → positive, "AI is scary" → negative
+    + More complex but powerful
+  
+  + **Advanced AI**
+    + LLM models (like ChatGPT, Deepseek) 
+    + it analyze context for higher accuracy, but they are complex 
+
+## Background: Sentiment Analysis and AI in Society
+
++ **Connection to AI and Society:**  
+  + Sentiment analysis reveals public attitudes toward AI and products, helping understand its societal impact.  
+  + Examples:  
+    + Companies analyze tweets to improve their products 
+    + Governments study comments to address concerns about the satifaction of its public services  
+    + Researchers explore how AI in healthcare is perceived
+      + e.g. trust in AI diagnostics  
+
++ By analyzing text, we learn what excites or worries people, driving further development to benefit society
+
+::: notes
+
++ AI is transforming society—powering education tools, automating jobs, and aiding doctors
+
++ Understanding public sentiment ensures AI is developed responsibly, addressing fears (e.g., privacy) and amplifying benefits
+  + e.g., better learning
+
+:::
+
+# Hands-on Workshop {visibility="uncounted"}
+
+## Step 1: Introduction and Setup
+
++ **Objective: set up RStudio**
+
++ **Task 1.1: Open RStudio**  
+  + Open RStudio  
+  + Create a new R script: `File > New File > R Script`
+    + Save as `sentiment_workshop.R` if needed
+
++ **Task 1.2: Install Packages**  
+  + Run in the console 
+
+. . .
+
+```{r}
+#| echo: True
+#| eval: False
+
+# Install necessary packages for sentiment analysis
+install.packages(c("tidyverse", "tidytext", "textdata"))
+
+```
+
++ note: tidyverse for data tasks; tidytext for text analysis; textdata for sentiment dictionaries
+
+::: notes
+
++ Step 1 - 10 minutes
+
++ Ensure textdata package is installed, as it provides AFINN, Bing, and NRC lexicons
+
++ **Content:**  
+  +  Explain sentiment analysis: "It’s like teaching a computer to read emotions in text, like excitement or fear about AI."
+  + Link to AI and Society: "We’ll analyze comments about AI to see how people feel about its impact on jobs or schools."  
+  + RStudio basics: Console (for commands), script editor (for saving code)
+
++ Practice (3 minutes):  
+
++ Type print("Hello, I’m learning R!") in the console and press Enter. What happens?  
+  + Guess: What sentiment score might "excited" have in a dictionary? "Sad"?
+
++ Discussion (2 minutes):  
+  + Why study sentiments about AI?  
+  + Example: How could knowing if people love or fear AI in schools help teachers?
+
+:::
+
+## Step 2: Loading Tools and Data 
+
++ **Objective: Load R packages and a dataset of comments**
+
++ Dataset
+  + Fictional social media comments about AI’s societal impact
+
+. . .
+
+```{r}
+#| echo: True
+#| eval: false
+
+library(tidyverse)
+library(tidytext)
+library(textdata)
+
+comments <- tibble(
+  id = 1:30,
+  text = c(
+    "AI is amazing and will make education so much better!",
+    "I’m worried AI will take over jobs and leave people unemployed.",
+    "AI helps doctors save lives, it’s a game-changer.",
+    "I don’t trust AI, it feels creepy and invasive.",
+    "AI is okay, but it needs regulation to be safe.",
+    "AI in schools is cool, but it’s not perfect.",
+    "Wow, AI is so great, it’ll solve all our problems… yeah, right!",  # Sarcasm
+    "AI makes healthcare faster and more accurate, love it!",
+    "Why does AI know so much about me? It’s unsettling.",
+    "AI chatbots are fun to talk to, but sometimes useless.",
+    "AI in movies is awesome, makes everything so realistic!",
+    "I’m scared AI will control everything one day.",
+    "AI helps me study better, it’s like a personal tutor.",
+    "AI is overhyped, it’s not as smart as people think.",  # Mixed
+    "Using AI for art is creative and inspiring!",
+    "AI in cars? No way, I don’t trust self-driving tech.",
+    "AI makes my phone so smart, it’s incredible!",
+    "I feel like AI is watching me all the time, creepy.",
+    "AI in gaming makes battles so epic, I’m hooked!",
+    "AI might replace teachers, and that’s not cool.",
+    "AI saves time at work, but I miss human interaction.",
+    "AI’s fine, but it makes mistakes sometimes.",  # Neutral
+    "AI in music creation is a total game-changer!",
+    "I’m skeptical about AI making fair decisions.",
+    "AI is great, but only if it’s used ethically.",  # Mixed
+    "AI makes life easier, but it’s a bit scary too.",  # Mixed
+    "AI in agriculture boosts crops, amazing stuff!",
+    "I don’t get why everyone loves AI so much.",  # Negative
+    "AI tutors are helpful, but they don’t replace real teachers.",
+    "AI sounds cool, but I’m not sure it’s safe."  # Mixed
+  )
+)
+
+```
+
++ **Task 2.1: Run the Code** 
+  + Run the code (highlight and press Ctrl+Enter)  
+
++ **Task 2.2: View the Data**  
+  + `print(comments)`
+  
++ **Task 2.3: View comments**  
+  + Run `view(comments)` in the console
+    + How many comments are there?  
+
+::: notes
+
++ 10 minutes
+
++ **Content:**  
+  + Introduce dataset: "We’ll analyze comments about AI’s impact on society, like education and jobs"
+
++ The dataset now includes 30 varied comments, covering:
+  + Positive: e.g., "AI makes healthcare faster and more accurate, love it!"
+  + Negative: e.g., "I’m scared AI will control everything one day."
+  + Neutral: e.g., "AI’s fine, but it makes mistakes sometimes."
+  + Complex: e.g., "Wow, AI is so great, it’ll solve all our problems… yeah, right!" (sarcasm), "AI is great, but only if it’s used ethically" (mixed emotions).
+  + Complex comments challenge lexicon-based approaches
+    + sarcasm (e.g. comment 7)
+    + mixed sentiments (e.g. comments 14, 25, 26, 30)
+      + AFINN may misinterpret due to its word-based scoring
+
++ Comments like "Wow, AI is so great, it’ll solve all our problems… yeah, right!" (sarcasm) may score positively due to words like "great" but are negative in context
+
++ Mixed comments (e.g., "AI makes life easier, but it’s a bit scary too") combine positive and negative words, potentially leading to misleading scores
+
++ Run `colnames(comments)` and `nrow(comments)`
+
++ Write down: Which comment seems happiest about AI? Most negative? 
+  + Example: "AI is amazing" vs. "AI feels creepy"
+
++ Discussion (2 minutes):  
+  + How might these comments reflect real opinions about AI?  
+  + Example: What might someone post about AI in movies or games? 
+
+:::
+
+
+## Step 3: Exploring the Dataset
+
++ **Objective: Understand the dataset’s structure**
+
+. . .
+
+```{r}
+#| echo: True
+#| eval: false
+
+colnames(comments)
+nrow(comments)
+
+comments$text[1]
+
+```
+
++ **Task 3.1: View Specific Comments**  
+  + Run `ncol(comments)` to check how many columns are in the dataset
+  
++ **Task 3.2: View Specific Comments**  
+  + Run `comments$text[4]` to see the fourth comment  
+  
+
+::: notes
+
++ 5 min
+
++ Content:  
+  + Dataset has id (comment number) and text (comment content)
+  + Exploring data helps us know what we’re analyzing
+
++ **Task: View a Specific Comment**
+  + Run `comments$text[3]`
+    + What does comment 3 say?
+ 
++ Practice (3 minutes):  
+  + Run comments$text[4]. What does it say?  
+  + Run ncol(comments). How many columns in the dataset?  
+  + Write down: What does id tell us about each comment?
+
++ Discussion (2 minutes):  
+  + Why explore data before analyzing it?   
+  + How can comments about AI help us understand its societal role?
+
+:::
+  
+  
+## Step 4: Splitting Text into Words
+
++ **Objective: Learn tokenization to break text into words**
+  
++ Tokenization splits sentences into words
+  + e.g. "AI is cool" $\rightarrow$ {"AI," "is," "cool"}
+  + Words are the building blocks for (most) sentiment analysis
+
+. . .
+
+```{r}
+#| echo: True
+#| eval: False
+
+words <- comments %>%
+  unnest_tokens(word, text)
+
+```
+
+
++ **Task 4.1: View Words**  
+  + `print(words)`
+
++ **Task 4.2: How many words are there?**
+  + Run `nrow(words)`  
+
++ **Task 4.3: View First 5 Words**  
+  + Run `head(words, 5)`
+  
++ **Task 4.4: How many unique words are there?**  
+  + Run `n_distinct(words$word)`
+
++ **Task 4.5: View Most Common Words**  
+  + Run `words %>% count(word, sort = TRUE) %>% head(10)`
+
++ **Task 4.6: How many times does "better" appear?**  
+  + Run `words %>% filter(word == "better")`
+
+
+::: notes
+
++ 12 minutes
+
++ Guess: Which words might show strong emotions?
+  + Discussion  
+    + Why split text into words?  
+    + How might words like "amazing" or "creepy" reflect feelings about AI?
+
++ words %>%
+  anti_join(stop_words) %>%
+  count(word, sort = TRUE) 
+
+:::
+
+
+## Step 5: Exploring Sentiment Lexicons
+
++ **Objective: Understand how lexicons assign sentiment scores**
+
++ A lexicon is a dictionary scoring words’ emotions
+  + **AFINN**: -5 to +5 
+    + e.g. "Happy" = +3, "scary" = -2
+  + Alternatives
+    + **Bing**: 
+      + a binary classification + positive/negative
+    + **NRC**: 
+      + emotion-based (e.g., joy, anger) and positive/negative classifications
+ 
+    
++ AI uses lexicons to quantify feelings in text
+
+::: notes
+
++ 12 minutes
+ 
+:::
+
+## Step 5: Exploring Sentiment Lexicons (continued)
+
++ We will use the **AFINN** lexicon, which assigns scores to words based on their sentiment
+  + Positive words have positive scores, negative words have negative scores
+  + Neutral words have a score of 0
+  
+. . .
+
+```{r}
+#| echo: True
+#| eval: false
+
+afinn <- get_sentiments("afinn")
+
+```
+
+
++ **Task 5.1: View Lexicon**
+  + Run: `head(afinn, 10)`
+
++ **Task 5.2: Check Scores for Specific Words**
+  + Run: `afinn %>% filter(word == "trust")`
+  + What’s its score?  
+  + Run: `afinn %>% filter(word == "bad")`
+  + Guess the score for "awesome"
+  + List two words you think are negative  
+
+::: notes
+
++ Check with `afinn %>% filter(word == "awesome")`  
+
++ Check their scores with `afinn %>% filter(word %in% c("word1", "word2"))`
+
++ Discussion (2 minutes):  
+  + How does a lexicon help AI understand text?  
+  + Why might it miss complex emotions (e.g., "AI is cool but scary")?
+
++ get_sentiments("bing") or get_sentiments("nrc")
+
+:::
+
+
+## Step 6: Scoring Words for Sentiment
+
++ **Objective: Assign sentiment scores to words**
+
++ Match dataset words to AFINN lexicon scores
+  + Only words in the lexicon get scores
+
+. . .
+
+```{r}
+#| echo: True
+#| eval: false
+
+sentiment_scores <- words %>%
+  inner_join(afinn, by = "word")
+
+```
+
++ **Task 6.1: View Scores**  
+  + Run: `print(sentiment_scores)`
+  + List one positive and one negative word 
+  
++ **Task 6.2: Count Negative Words**  
+  + Run: `sentiment_scores %>% filter(value < 0)`
+
++ **Task 6.3: Count Positive Words**  
+  + Run: `sentiment_scores %>% filter(value > 0)`
+
+::: notes
+
++ Guess: Why might some words (e.g., "AI") not appear?
+
++ Discussion (2 minutes):  
+
++ How do scores show opinions about AI?  
+  + Example: How might negative scores about AI jobs affect workers?
+
+:::
+
+## Step 7: Summarizing Comment Sentiment
+
++ **Objective: Calculate total sentiment for each comment**
+
++ Sum word scores per comment to get its overall sentiment
+  + Positive total = positive comment
+  + Negative total = negative comment
+
+. . .
+
+```{r}
+#| echo: True
+#| eval: false
+
+comment_sentiment <- sentiment_scores %>%
+  group_by(id) %>%
+  summarize(total_score = sum(value)) %>%
+  right_join(comments, by = "id") %>% 
+  arrange(id)
+
+```
+
+
++ **Task 7.1: View Results**
+  + Run `print(comment_sentiment)`
+  + Which comment has the highest total_score? Lowest?  
+
++ **Task 7.2: Sort by Total Score**
+  + Run `comment_sentiment %>% arrange(desc(total_score))`
+  + Which is most positive?  
+
++ **Task 7.3: Check Comment 18’s Score**
+  + Read comment 18’s text and score
+  + Do they match?  
+
++ **Task 7.4: Check Neutral Comments**
+  + Run `comment_sentiment %>% filter(total_score == 0)`
+  + Any neutral comments?
+
++ **Task 7.5: Add Sentiment Labels**
+  + Run the following code
+
+. . .
+
+```{r}
+#| echo: True
+#| eval: false
+
+comment_sentiment <- comment_sentiment %>% 
+  mutate(sentiment = case_when(is.na(total_score) ~ NA_character_,
+                               total_score > 0 ~ "Positive", 
+                               total_score < 0 ~ "Negative",
+                               TRUE ~ "Neutral"))
+
+```
+
+::: notes
+
++ Step 7 - 15 minutes
+
++ Discussion (2 minutes):  
+  + What do scores tell us about views on AI?  
+  + Example: How might positive scores about AI in healthcare help doctors?
+
++ **Task 7.5: Add a New Comment**  
+  + Add a new comment
+    `comments <- comments %>% add_row(id = 31, text = "AI makes learning fun but can be confusing.")`
+    + What’s the new comment’s score?  
+    + Run comment_sentiment %>% filter(total_score > 0) -  How many positive comments?
+  
+:::
+
+
+## Step 8: Visualizing and Discussing Results
+
++ **Objective: Visualize sentiment and discuss AI’s societal impact**
+
++ Create a bar plot to see positive/negative sentiments
+
+. . .
+
+```{r}
+#| echo: True
+#| eval: false
+
+ggplot(comment_sentiment, aes(x = id, y = total_score, fill = sentiment)) +
+  geom_bar(stat = "identity", na.rm = TRUE) +
+  geom_text(
+    data = filter(comment_sentiment, !is.na(total_score)),
+    aes(
+      label = total_score,
+      vjust = case_when(
+        total_score >= 0 ~ -0.3,
+        total_score < 0  ~ 1.3
+      )
+    )
+  ) +
+  geom_text(
+    data = filter(comment_sentiment, is.na(total_score)),
+    aes(y = 0, label = "NA"),
+    vjust = -0.3,
+    color = "black",
+    size = 2
+  ) +
+  labs(title = "Sentiment Scores of Comments about AI usign AFINN",
+       x = "Comment ID", y = "Sentiment Score") +
+  scale_fill_manual(
+    name = "Sentiment",
+    values = c("Negative" = "red", "Positive" = "blue"),
+    labels = c("Negative", "Positive"),
+    na.translate = FALSE # don't show NA in the legend
+  ) +
+  scale_x_continuous(breaks = seq(2, 30, by = 2)) +
+  theme_minimal()
+
+
+```
+
+
++ **Task 8.1: Create Plot** 
+  + Run the plot code  
+  + Identify: Which comments are blue (positive)? Red (negative)?
+
++ **Task 8.2: Plot the density of sentiment distribution**
+  + Create a density plot of sentiment scores
+  + Use `geom_density()` to visualize the distribution
+
+. . .
+
+```{r}
+#| echo: True
+#| eval: false
+
+ggplot(comment_sentiment, aes(x = total_score, fill = sentiment)) +
+  geom_density(alpha = 0.5) +
+  labs(title = "Density Plot of Comment Sentiment Scores",
+       x = "Sentiment Score", y = "Density") +
+  theme_minimal()
+
+```
+
++ **Task 8.3: Plot the histogram of sentiment label**  
+  + Create a histogram of sentiment labels
+  + Use `geom_bar()` to visualize counts of each sentiment label
+
+. . .
+
+```{r}
+#| echo: True
+#| eval: false
+
+ggplot(comment_sentiment, aes(x = sentiment, fill = sentiment)) +
+  geom_bar() +
+  geom_text(
+    stat = "count",
+    aes(label = after_stat(count)),
+    vjust = -0.5
+  ) +
+  labs(title = "Histogram of Sentiment Labels",
+       x = "Sentiment", y = "Count") +
+  theme_minimal()
+
+```
+
+
+::: notes
+
++ Step 8 - 24 minutes
+
++ Practice (6 minutes)
+  + Run comment_sentiment %>% filter(id == 7). Why might the sarcastic comment’s score be misleading?
+  + Try the Bing lexicon: Replace afinn with get_sentiments("bing") in Step 6 and rerun Steps 6–8
+    + Compare results
+    
+:::
+
+## Step 9: Exploring other Lexicon
+
+**Objective:** Explore Bing and NRC sentiment lexicons as alternatives to AFINN
+
++ What are Bing and NRC? (recap)
+  + **Bing Lexicon:**  
+    + Classifies words as "positive" or "negative" only (no score)
+  + **NRC Lexicon:**  
+    + Assigns words to emotions (joy, anger, fear, etc.) and positive/negative
+
++ **Tasks: Load Bing and NRC Lexicons**
+
+. . .
+
+```{r}
+#| echo: True
+#| eval: false
+
+library(tidytext)
+
+bing <- get_sentiments("bing")
+
+nrc <- get_sentiments("nrc")
+
+```
+
++ **Task: View Lexicon Examples**
+
+. . .
+
+```{r}
+#| echo: True
+#| eval: false
+
+head(bing, 10)
+
+head(nrc, 10)
+
+```
+
++ **Task: Join Words with Bing**
+
+. . .
+
+```{r}
+#| echo: True
+#| eval: false
+
+words_bing <- words %>%
+  inner_join(bing, by = "word")
+
+words_nrc <- words %>%
+  inner_join(nrc, by = "word")
+
+```
+
+::: notes
+
++ some words show up more than 1 time
+
+word_counts <- bing %>%
+  group_by(word) %>%
+  summarise(count = n()) %>%
+  filter(count > 1)
+  
+:::
+
+
+
+## Step 9: Exploring other Lexicon (continued)
+
++ **Summarize Sentiment by Comment (Bing)**
+
+. . .
+
+```{r}
+#| echo: True
+#| eval: false
+
+comment_sentiment_bing <- words_bing %>%
+  group_by(id, sentiment) %>%
+  summarise(word_count = n(), .groups = "drop") %>%
+  pivot_wider(names_from = sentiment, values_from = word_count, values_fill = 0) %>%
+  right_join(comments, by = "id") %>% 
+  mutate(total_score = positive - negative) %>%
+  mutate(sentiment = case_when(
+      is.na(total_score) ~ NA_character_,
+      total_score > 0 ~ "Positive",
+      total_score < 0 ~ "Negative",
+      TRUE ~ "Neutral"
+    )) %>% arrange(id)
+
+```
+
+. . .
+
++ **Summarize Sentiment by Comment (NRC)**
+
+. . .
+
+```{r}
+#| echo: True
+#| eval: false
+
+words_nrc_pn <- words_nrc %>% filter(sentiment %in% c("positive", "negative"))
+
+comment_sentiment_nrc <- words_nrc_pn %>%
+  group_by(id, sentiment) %>%
+  summarise(word_count = n(), .groups = "drop") %>%
+  pivot_wider(names_from = sentiment, values_from = word_count, values_fill = 0) %>%
+  right_join(comments, by = "id") %>%
+  mutate(total_score = positive - negative) %>%
+  mutate(sentiment = case_when(
+    is.na(total_score) ~ NA_character_,
+    total_score > 0 ~ "Positive",
+    total_score < 0 ~ "Negative",
+    TRUE ~ "Neutral"
+  )) %>% arrange(id)
+
+```
+
++ **Task 9.1: Compare Positive and Negative Comments**  
+  + Run `comment_sentiment_bing %>% filter(positive > 0)`  
+  + Run `comment_sentiment_nrc %>% filter(positive > 0)`  
+  + Which comments are positive by Bing? Which by NRC?
++ **Task 9.2: Visualize Bing Results**
+  + Create bar plots to visualize positive and negative word counts per comment
+  + Use `geom_bar()` to show counts of positive and negative words
+
+. . .
+
+```{r}
+#| echo: True
+#| eval: false
+
+library(ggplot2)
+
+ggplot(comment_sentiment_bing, aes(x = sentiment)) +
+  geom_bar(fill = "blue", alpha = 0.5) +
+  labs(title = "Bing Lexicon: Histogram of Sentiment", x = "Sentiment", y = "Count") +
+  geom_text(stat = "count", aes(label = after_stat(count)), vjust = -0.5) +
+  theme_minimal()
+
+```
+
++ **Task 9.3 compare Bing with AFINN**
+  + Compare Bing and AFINN results
+  + Create a comparison dataframe with both lexicons
+  + Use `left_join()` to merge AFINN and Bing results by comment ID
+  + Identify comments where Bing and AFINN disagree
+
+. . .
+
+```{r}
+#| echo: True
+#| eval: false
+
+comparison_df2 <- comments %>% 
+  left_join(comment_sentiment_bing %>% select(id, sentiment), by = "id") %>%
+  rename(sentiment_bing = sentiment) %>%
+  left_join(comment_sentiment %>% select(id, sentiment), by = "id") %>%
+  rename(sentiment_afinn = sentiment)
+
+comparison_df2
+
+# show the comments where Bing and AFINN disagree
+
+comparison_df2 %>%
+  filter(sentiment_bing != sentiment_afinn | is.na(sentiment_bing) != is.na(sentiment_afinn))
+
+```
+
+
+::: notes
+
++ Bing
+
+```{r}
+#| echo: true
+#| eval: false
+
+ggplot(comment_sentiment_bing, 
+       aes(x = id, y = total_score, fill = total_score > 0)) +
+  geom_bar(stat = "identity") +
+  geom_text(
+    aes(label = total_score),
+    vjust = -0.3
+  ) +
+  labs(title = "Sentiment Scores of Comments about AI using Bing lexicon",
+       x = "Comment ID", y = "Sentiment Score") +
+  scale_fill_manual(
+    name = "Sentiment",
+    values = c("red", "blue"), 
+    labels = c("Negative", "Positive"),
+    na.translate = FALSE
+  ) +
+  scale_x_continuous(breaks = seq(2, 30, by = 2)) +
+  theme_minimal()
+
+```
+
+
++ **Task 9.3: Visualize NRC Emotions**  
+  + Try visualizing NRC emotions (joy, anger, etc.) using a bar plot
+    + Use `geom_bar()` to show counts of each emotion per comment
+    + Example code:
+
+. . .
+
+```{r}
+#| echo: True
+#| eval: false
+
+words_nrc_emotions <- words_nrc %>%
+    filter(!sentiment %in% c("positive", "negative")) %>%
+    group_by(id, sentiment) %>%
+    summarise(word_count = n(), .groups = "drop")
+
+ggplot(words_nrc_emotions, aes(x = sentiment, y = word_count, fill = sentiment)) +
+    geom_bar(stat = "identity") +
+    facet_wrap(~id, ncol = 6) +
+    labs(title = "NRC Emotions per Comment", x = "Emotion", y = "Word Count") +
+    theme_minimal() +
+    theme(axis.text.x = element_text(angle = 45, hjust = 1))
+
+```
+
++ **Task 9.4: Discuss Lexicon Differences**
+  + Which lexicon (AFINN, Bing, NRC) seems best for your dataset? 
+    + Consider factors like vocabulary coverage, sentiment granularity, and performance on your specific comments.
++ **Task 9.5: Discuss Nuance and Sarcasm**
+    + Does NRC capture more nuance?  
+        + How do results compare for sarcasm or mixed comments?
+        + Discuss how NRC’s emotion-based approach might better capture complex sentiments like sarcasm or mixed emotions compared to AFINN or Bing
++ **Task 9.6: Discuss Lexicon Limitations**
+    + Discuss how lexicons like AFINN and Bing may struggle with sarcasm or mixed sentiments
+        + e.g., "Wow, AI is so great, it’ll solve all our problems… yeah, right!"  
+        + AFINN might score "great" positively, missing the sarcasm
+
+:::
+
+## Step 10 Sentiment Analysis with Ollama
+
++ **Objective: Use Ollama with Llama 3.2:3b to perform sentiment analysis**
+
++ Ollama runs large language models (LLMs) like Llama 3.2:3b locally
+  + offering nuanced sentiment analysis by understanding context
+
+. . .
+
+```{r}
+#| echo: True
+#| eval: false
+
+install.packages("ollamar")
+
+```
+
++ Load Ollama 
+
+. . .
+
+```{r}
+#| echo: True
+#| eval: false
+
+library(ollamar)
+
+test_connection()
+
+list_models()
+
+#pull("llama3.1")  # download a model (equivalent bash code: ollama run llama3.1)
+
+```
+
++ testing
+
+. . .
+
+
+```{r}
+#| echo: True
+#| eval: false
+
+# generate a response/text based on a prompt; returns an httr2 response by default
+resp <- generate(model="llama3.2:3b", prompt="tell me a 50-word story")
+resp
+
+# get just the text from the response object
+resp_process(resp, "text")
+
+# get the text as a tibble dataframe
+resp_process(resp, "df")
+
+```
+
+
+## Step 10 Sentiment Analysis with Ollama (continued)
+
++ Define the function to get sentiment using Ollama
+
+. . .
+
+```{r}
+#| echo: True
+#| eval: false
+
+get_sentiment_ollama <- function(text) {
+  prompt <- paste("Classify the sentiment of the following text as Positive, Negative, or Neutral, and respond with only the label:", text)
+  response <- generate(model = "llama3.2:3b", prompt = prompt, output="text")
+  return(response)
+}
+
+```
+
++ **Task 9.1: Test the Function**  
+  + Run `get_sentiment_ollama("AI is amazing and will make education so much better!")` 
+  + What sentiment does it return?
+  
++ **Task 9.2: Analyze All Comments**
+
+. . .
+
+```{r}
+#| echo: True
+#| eval: False
+
+library(tidyverse)
+
+comments_ollama <- comments %>% mutate(sentiment_ollama = map_chr(text, get_sentiment_ollama))
+
+```
+
+
+## Step 11: Compare with lexicon-based approach
+
++ Compare with  lexicon to see differences
+  + especially in complex comments (e.g. sarcasm, mixed emotions)
+
++ Add to comment_sentiment and categorize lexicon sentiments
+
+. . .
+
+```{r}
+#| echo: True
+#| eval: False
+
+comment_sentiment3 <- comparison_df2 %>% 
+  left_join(comments_ollama %>% select(id, sentiment_ollama), by = "id")
+
+```
+
+
++ **Task 11.1: Visualize Sentiment Comparison**
+
+. . .
+
+```{r}
+#| echo: True
+#| eval: False
+
+library(tidyr)
+
+comparison3 <- comment_sentiment3 %>%
+  select(id, sentiment_afinn, sentiment_bing, sentiment_ollama) %>%
+  pivot_longer(cols = c(sentiment_afinn, sentiment_bing, sentiment_ollama), 
+               names_to = "method", 
+               values_to = "sentiment")
+
+comparison_counts3 <- comparison3 %>%
+  count(method, sentiment)
+
+ggplot(comparison_counts3, aes(x = sentiment, y = n, fill = method)) +
+  geom_bar(stat = "identity", position = "dodge") +
+  labs(title = "Sentiment Distribution Comparison", 
+       x = "Sentiment", y = "Count") +
+  scale_fill_manual(name = "Method",
+                    values = c("#1f77b4", "#ff7f0e", "#2ca02c"), 
+                    labels = c("AFINN (Lexicon)", "Bing (Lexicon)", "llama3.2:3b (LLM)")) +
+  scale_y_continuous(breaks = seq(0, max(comparison_counts3$n, na.rm = TRUE) + 3, by = 3)) +
+  theme_minimal()
+
+
+```
+
+::: notes
+
++ geom_text(aes(label = n), position = position_dodge(width = 0.45), hjust= 1., vjust = -0.5) +
+
+library(ggplot2)
+
+ggplot(comparison_counts3, aes(x = sentiment, y = n, fill = method)) +
+  geom_bar(stat = "identity", position = "dodge", color = "black", linewidth = 0.2) +
+  geom_text(aes(label = n), position = position_dodge(width = 0.45), vjust = -0.5, 
+            size = 3.5, fontface = "bold") +
+  labs(title = "Comparison of Sentiment Distribution Across Methods", 
+       subtitle = "Counts of Sentiment Categories by Analysis Method",
+       x = "Sentiment Category", 
+       y = "Number of Comments",
+       caption = "Data source: Sentiment analysis of comments using AFINN, Bing, and Ollama") +
+  scale_fill_manual(name = "Sentiment Analysis Method", 
+                    values = c("#1b9e77", "#d95f02", "#7570b3"), 
+                    labels = c("Lexicon (AFINN)", "Lexicon (Bing)", "Ollama (LLM)")) +
+  scale_y_continuous(breaks = seq(0, max(comparison_counts3$n, na.rm = TRUE) + 3, by = 3),
+                     expand = expansion(mult = c(0, 0.1))) +
+  theme_minimal(base_size = 14) +
+  theme(
+    plot.title = element_text(face = "bold", size = 16, hjust = 0.5),
+    plot.subtitle = element_text(size = 12, hjust = 0.5, margin = margin(b = 10)),
+    plot.caption = element_text(size = 10, hjust = 0, color = "grey50"),
+    axis.title = element_text(face = "bold"),
+    axis.text = element_text(color = "black"),
+    legend.position = "top",
+    legend.title = element_text(face = "bold", size = 12),
+    legend.text = element_text(size = 10),
+    panel.grid.major.x = element_blank(),
+    panel.grid.minor = element_blank(),
+    plot.margin = margin(10, 10, 10, 10)
+  )
+:::
+
+## Step 11: compare with lexicon-based approach (continued)
+
++ **Task 11.2: Identify Differing Comments**
+  + Find comments where `sentiment_lexicon != sentiment_ollama`
+
+. . .
+
+```{r}
+#| echo: True
+#| eval: False
+
+differing_comments <- comment_sentiment3 %>%
+  filter(sentiment_afinn != sentiment_ollama | sentiment_bing !=sentiment_ollama | sentiment_afinn != sentiment_ollama) %>%
+  select(id, text, sentiment_afinn, sentiment_bing, sentiment_ollama)
+
+print(differing_comments)
+
+```
+
++ **Task 11.3: Examine Specific Comments**
+  + Run `comment_sentiment %>% filter(id %in% c(7, 14, 26))`
+  + Why might the lexicon and LLM differ for these comments?  
+    + Discuss how LLMs capture context (e.g., sarcasm) better than lexicons
+
+
+::: notes
+
++ ID 7: "Wow, AI is so great, it’ll solve all our problems… yeah, right!" (sarcasm)
+
++ ID 14: "AI is overhyped, it’s not as smart as people think." (mixed)
+
++ ID 26: "AI makes life easier, but it’s a bit scary too." (mixed)
+
++ Discussion
+  + Why do comments like ID 7 (sarcasm) differ? 
+    + Lexicon may score "great" positively
+    + but Llama 3.2:3b detects sarcasm.
+
++ Comments with Significant Differences
+  + The following comments are likely to show discrepancies between AFINN and Llama 3.2:3b, as highlighted in Task 9.3:
+  + ID 7: "Wow, AI is so great, it’ll solve all our problems… yeah, right!"
+    + AFINN: Positive (due to "great" +3, "solve" +2), ignoring sarcastic "yeah, right."
+    + Llama 3.2:3b: Negative, detecting sarcasm through context.
+      + Why Different: Lexicons score words individually, missing tone; LLMs analyze full sentences.
+  + ID 14: "AI is overhyped, it’s not as smart as people think."
+    + AFINN: Neutral or negative (e.g., "overhyped" -2, "smart" +2 may cancel out).
+    + Llama 3.2:3b: Negative, recognizing critical intent.
+    + Why Different: AFINN averages word scores; Llama 3.2:3b captures overall sentiment.
+  + ID 26: "AI makes life easier, but it’s a bit scary too."
+    + AFINN: Neutral (e.g., "easier" +2, "scary" -2 balance out).
+    + Llama 3.2:3b: Negative or mixed, emphasizing "scary" in context.
+  + Why Different: Lexicons struggle with mixed emotions; LLMs weigh context.
+
++ These differences spark discussion in Step 9 about lexicon limitations (e.g., missing sarcasm) and LLM strengths (e.g., contextual understanding
+
++ How do LLMs improve on lexicons for complex sentiments?
+  + What are the trade-offs (e.g., LLM complexity vs. lexicon simplicity)?
+
++ Note for Facilitators: Ensure Ollama is installed and Llama 3.2:3b is pulled (ollama pull llama3.2:3b)
+  + This step may take longer due to LLM processing
+    + consider pre-computing results or running on a subset if time is limited
+
+  + Run comment_sentiment %>% filter(id == 14). Why might the lexicon and LLM differ
+
++ Try the NRC lexicon: Replace afinn with get_sentiments("nrc") in Step 6
+  + (adjust for emotion categories) and rerun Steps 6–8
+  + Compare with Ollama
+  + Highlight how LLMs capture context (e.g., sarcasm in ID 7) better than lexicons
+
+:::
+
+## More Discussion
+
++ Share one comment and its score
+  + Does it match the text’s tone?  
+
++ How does sentiment analysis help understand AI’s societal impact? 
+
++ Companies: Improve AI based on feedback  
+  + e.g. if many comments are negative about AI in jobs, they can address concerns
+  
++ Governments
+  + Address fears about AI privacy or jobs
+
++ Society: Highlight excitement for AI in education or healthcare
+
++ **Wrap-up Questions:**
+  + What surprised you about the comments?
+  + How might sentiment analysis help shape AI’s future in society?
+  + What are the limits of sentiment analysis?  
+
+::: notes
+
++ e.g. it might miss sarcasm or cultural nuances
+
+:::
+
+
+## Takeaway  
+
++ Sentiment analysis is an AI tool to understand emotions in text
+
++ You’ve learned R to 
+  + load data
+  + tokenize
+  + score and classify sentiments
+  + visualize sentiments  
+
+
+## Resources {visibility="uncounted"}  
+
++ [R for Data Science](https://r4ds.had.co.nz/)  
+
++ [Tidytext Book](https://www.tidytextmining.com/)  
+
++ [Kaggle](https://www.kaggle.com/) - Search "Twitter sentiment" for practice datasets
+
+::: notes
+
++ Facilitator Notes
+  + Preparation
+    + Ensure R and RStudio are installed. Pre-install packages (tidyverse, tidytext, textdata) to save time 
+  + Dataset
+    + Small, fictional dataset keeps it simple. For advanced students, consider a real dataset (e.g., tweets) in a follow-up  
+  + Pacing
+    + Each step is 10–12 minutes, with 24 minutes for Step 8. Skip one practice task per step if running over
+    + Total: ~95 minutes hands-on + ~15 minutes discussion = ~110 minutes  
+  + Engagement
+    + Encourage sharing in discussions to connect to real-world AI issues
+  + Troubleshooting: Assist with RStudio (console vs. script) and package errors
+
+:::
+
+## **Assignment: Real-World Sentiment Analysis Practice**
+
+Analyze Social Media Data with Lexicon and LLM Methods
+
++ **Objective:**  Practice everything learned using a real-world dataset 
+
++ **Step 1: Download and Load Data**
+
+. . .
+
+```{r}
+#| echo: True
+#| eval: false
+
+
+library(tidyverse)
+
+real_comments <- read_csv("https://raw.githubusercontent.com/laxmimerit/All-CSV-ML-Data-Files-Download/refs/heads/master/twitter_sentiment.csv", col_names = c("id","entity", "sentiment", "text"))
+
+head(real_comments)
+
+```
+
++ **Step 2: Tokenize and Clean Data**
+
+. . .
+
+```{r}
+#| echo: True
+#| eval: false
+
+library(tidytext)
+real_words <- real_comments %>%
+  unnest_tokens(word, text)
+
+```
+
++ **Step 3: Compare Lexicons among AFINN, Bing and NRC**
+
+. . .
+
+```{r}
+#| echo: True
+#| eval: false
+
+afinn <- get_sentiments("afinn")
+bing <- get_sentiments("bing")
+nrc <- get_sentiments("nrc")
+
+# Join and score with AFINN
+real_sentiment_afinn <- real_words %>%
+  inner_join(afinn, by = "word") %>%
+  group_by(id) %>%
+  summarize(total_score = sum(value, na.rm = TRUE))
+
+# Join and score with Bing
+real_sentiment_bing <- real_words %>%
+  inner_join(bing, by = "word") %>%
+  group_by(id, sentiment.y) %>%
+  summarize(word_count = n(), .groups = "drop") %>%
+  pivot_wider(names_from = sentiment.y, values_from = word_count, values_fill = 0)
+
+# Join and score with NRC (positive/negative)
+real_sentiment_nrc <- real_words %>%
+  inner_join(nrc %>% filter(sentiment %in% c("positive", "negative")), by = "word") %>%
+  group_by(id, sentiment.y) %>%
+  summarize(word_count = n(), .groups = "drop") %>%
+  pivot_wider(names_from = sentiment.y, values_from = word_count, values_fill = 0)
+
+```
+
++ **Step 4: Visualize Results**
+
+. . .
+
+```{r}
+#| echo: True
+#| eval: false
+
+# AFINN
+library(ggplot2)
+ggplot(real_sentiment_afinn, aes(x = id, y = total_score)) +
+  geom_bar(stat = "identity", fill = "steelblue") +
+  labs(title = "AFINN Sentiment Scores", x = "Comment ID", y = "Score") +
+  theme_minimal()
+
+# Bing
+ggplot(real_sentiment_bing, aes(x = id)) +
+  geom_bar(aes(y = positive), stat = "identity", fill = "blue", alpha = 0.5) +
+  geom_bar(aes(y = -negative), stat = "identity", fill = "red", alpha = 0.5) +
+  labs(title = "Bing Lexicon: Positive vs Negative", x = "Comment ID", y = "Word Count") +
+  theme_minimal()
+```
+
++ **Step 5: (Optional) Use Ollama/LLM for Sentiment**
+
+. . .
+
+```{r}
+#| echo: True
+#| eval: false
+
+# If you have Ollama and Llama3 installed:
+library(ollamar)
+get_sentiment_ollama <- function(text) {
+  prompt <- paste("Classify the sentiment of the following text as positive, negative, or neutral, and respond with only the label in lower case:", text)
+  response <- generate(model = "llama3.2:3b", prompt = prompt, output="text")
+  return(response)
+}
+real_comments <- real_comments %>%
+  mutate(sentiment_ollama = map_chr(text, get_sentiment_ollama))
+
+```
+
+. . .
+
++ **Step 6: Compare and Discuss**
+
+- Compare lexicon and LLM results
+- Which method best handles sarcasm, mixed emotions, or context?
+- Write a short paragraph (3–5 sentences) on your findings
+
+
+::: notes
+
++ **Deliverables:**  
+  - R script with code for all steps  
+  - Plots comparing sentiment by method  
+  - Short discussion of your results
+
++ **Bonus:**  
+    + Try analyzing sentiment on comments about another societal topic (e.g. climate change, education, public health)
+:::
